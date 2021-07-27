@@ -1,10 +1,10 @@
-package com.example.ssa.entity.user.manager;
+package com.example.ssa.entity.user.constants;
 
-public class ManagerConstants {
-    public static final String TABLE_NAME = "manager";
+public class AppUserConstants {
+    public static final String TABLE_NAME = "app_user";
     public static final String ID = "id";
     public static final String FIRSTNAME = "firstname";
     public static final String SURNAME = "surname";
+    public static final String EMAIL = "email";
     public static final String USER_ROLE = "user_role";
-    public static final String STAFF_IDS = "staff_ids";
 }
