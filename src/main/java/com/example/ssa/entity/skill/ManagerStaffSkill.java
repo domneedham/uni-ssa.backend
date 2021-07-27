@@ -26,7 +26,7 @@ public class ManagerStaffSkill {
     @JoinColumn(name = ManagerStaffSkillConstants.SKILL_ID)
     private Skill skill;
 
-    @OneToMany()
-    @Column(name = ManagerStaffSkillConstants.STAFF_IDS)
-    private List<AppUser> staffDetails;
+    @OneToOne()
+    @JoinColumn(name = ManagerStaffSkillConstants.STAFF_ID)
+    private AppUser staffDetails;
 }
