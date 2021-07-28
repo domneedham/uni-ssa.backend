@@ -22,7 +22,7 @@ import java.time.ZonedDateTime;
 public class StaffSkill {
     @Id
     @Column(name = StaffSkillConstants.ID)
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     @ManyToOne()

@@ -19,7 +19,7 @@ import java.util.List;
 public class ManagerStaffSkill {
     @Id
     @Column(name = ManagerStaffSkillConstants.ID)
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     @ManyToOne()

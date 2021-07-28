@@ -17,7 +17,7 @@ import javax.persistence.*;
 public class ManagerStaffLink {
     @Id
     @Column(name = ManagerStaffLinkConstants.ID)
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     @Column(name = ManagerStaffLinkConstants.MANAGER_ID)
