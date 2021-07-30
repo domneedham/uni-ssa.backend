@@ -15,7 +15,7 @@ INSERT INTO skill (name, category_id) VALUES ('Skiing', 1);
 INSERT INTO skill (name, category_id) VALUES ('Skiball', 1);
 INSERT INTO skill (name, category_id) VALUES ('Skipping', 2);
 
-INSERT INTO staff_skill (skill_id, staff_id, last_updated, rating) VALUES (1, 1, NOW(), 5);
+INSERT INTO staff_skill (skill_id, staff_id, last_updated, rating, expires) VALUES (1, 1, NOW(), 5, NOW());
 INSERT INTO staff_skill (skill_id, staff_id, last_updated, rating) VALUES (3, 1, NOW(), 5);
 INSERT INTO staff_skill (skill_id, staff_id, last_updated, rating) VALUES (1, 3, NOW(), 3);
 INSERT INTO staff_skill (skill_id, staff_id, last_updated, rating) VALUES (3, 3, NOW(), 3);

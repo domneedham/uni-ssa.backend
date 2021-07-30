@@ -26,6 +26,11 @@ public class SkillController {
         return skillRepository.findById(id);
     }
 
+    @GetMapping("/search/{name}")
+    public List<Skill> searchByName(@PathVariable("name") String name) {
+        return skillRepository.findAllByNameContainingIgnoreCase(name);
+    }
+
     @PostMapping("/create")
     public Skill create(@RequestBody Skill skill) {
         return skillRepository.save(skill);
