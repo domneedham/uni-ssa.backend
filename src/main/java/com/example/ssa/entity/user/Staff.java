@@ -31,6 +31,6 @@ public class Staff {
     @JoinColumn(name = StaffConstants.MANAGER_ID)
     private AppUser managerDetails;
 
-    @OneToMany(mappedBy = "staff")
+    @OneToMany(mappedBy = "staffDetails")
     private List<StaffSkill> skills = new ArrayList<>();
 }

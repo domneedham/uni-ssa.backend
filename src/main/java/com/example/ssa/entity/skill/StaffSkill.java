@@ -17,8 +17,6 @@ import java.time.ZonedDateTime;
 @Setter
 @ToString
 @EqualsAndHashCode
-// ignore staff property as redundant
-@JsonIgnoreProperties("staff")
 public class StaffSkill {
     @Id
     @Column(name = StaffSkillConstants.ID)
@@ -31,7 +29,7 @@ public class StaffSkill {
 
     @ManyToOne()
     @JoinColumn(name = StaffSkillConstants.STAFF_ID)
-    private AppUser staff;
+    private AppUser staffDetails;
 
     @Column(name = StaffSkillConstants.RATING)
     private Integer rating;
