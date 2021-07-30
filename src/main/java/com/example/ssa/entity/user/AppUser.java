@@ -1,10 +1,12 @@
 package com.example.ssa.entity.user;
 
 import com.example.ssa.entity.user.constants.AppUserConstants;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.Formula;
 
 import javax.persistence.*;
 
@@ -32,4 +34,8 @@ public class AppUser {
     @Column(name = AppUserConstants.USER_ROLE)
     @Enumerated(EnumType.STRING)
     private UserRole userRole;
+
+    @Formula("CONCAT_WS(' ', firstname, surname)")
+    @JsonIgnore
+    private String name;
 }

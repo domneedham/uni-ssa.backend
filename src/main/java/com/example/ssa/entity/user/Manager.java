@@ -1,7 +1,6 @@
 package com.example.ssa.entity.user;
 
 import com.example.ssa.entity.user.constants.ManagerConstants;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,7 +20,7 @@ public class Manager  {
     @Column(name = ManagerConstants.USER_ID)
     private long id;
 
-    @OneToOne
+    @OneToOne()
     @MapsId
     @JoinColumn(name = ManagerConstants.USER_ID)
     private AppUser userDetails;
