@@ -18,11 +18,11 @@ public class ManagerStaffLink {
     @Id
     @Column(name = ManagerStaffLinkConstants.ID)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     @Column(name = ManagerStaffLinkConstants.MANAGER_ID)
-    private long managerId;
+    private Long managerId;
 
     @Column(name = ManagerStaffLinkConstants.STAFF_ID)
-    private long staffId;
+    private Long staffId;
 }

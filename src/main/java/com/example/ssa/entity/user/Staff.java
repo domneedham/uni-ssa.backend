@@ -20,7 +20,7 @@ import java.util.List;
 public class Staff {
     @Id
     @Column(name = StaffConstants.USER_ID)
-    private long id;
+    private Long id;
 
     @OneToOne()
     @MapsId

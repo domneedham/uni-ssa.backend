@@ -23,7 +23,7 @@ public class StaffSkill {
     @Id
     @Column(name = StaffSkillConstants.ID)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     @ManyToOne()
     @JoinColumn(name = StaffSkillConstants.SKILL_ID)

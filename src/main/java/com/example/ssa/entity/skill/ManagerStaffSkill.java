@@ -19,7 +19,7 @@ public class ManagerStaffSkill {
     @Id
     @Column(name = ManagerStaffSkillConstants.ID)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     @ManyToOne()
     @JoinColumn(name = ManagerStaffSkillConstants.SKILL_ID)

@@ -18,7 +18,7 @@ import java.util.List;
 public class Manager  {
     @Id
     @Column(name = ManagerConstants.USER_ID)
-    private long id;
+    private Long id;
 
     @OneToOne()
     @MapsId

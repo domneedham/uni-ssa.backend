@@ -20,7 +20,7 @@ public class AppUser {
     @Id
     @Column(name = AppUserConstants.ID)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     @Column(name = AppUserConstants.FIRSTNAME)
     private String firstname;
