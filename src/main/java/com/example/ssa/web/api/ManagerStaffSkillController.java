@@ -27,14 +27,4 @@ public class ManagerStaffSkillController {
     public Optional<ManagerStaffSkill> findById(@PathVariable("id") long id) {
         return skillRepository.findById(id);
     }
-
-    @GetMapping("/users/{id}")
-    public List<AppUser> findByStaffDetailsId(@PathVariable("id") long id) {
-        List<ManagerStaffSkill> list = skillRepository.findAllBySkillId(id);
-        List<AppUser> userList = new ArrayList<>();
-        for (ManagerStaffSkill skill : list) {
-            userList.add(skill.getStaffDetails());
-        }
-        return userList;
-    }
 }

@@ -29,7 +29,7 @@ CREATE TABLE manager_staff_link (
 CREATE TABLE category (
     id          INT AUTO_INCREMENT PRIMARY KEY,
     name        CHAR (255) NOT NULL,
-    icon        CHAR (255) NOT NULL
+    icon        INT NOT NULL
 );
 
 CREATE TABLE skill (
@@ -48,14 +48,6 @@ CREATE TABLE staff_skill (
     expires     DATE,
     foreign key (skill_id) references skill (id),
     foreign key (staff_id) references staff (user_id)
-);
-
-CREATE TABLE manager_staff_skill (
-     id       INT AUTO_INCREMENT PRIMARY KEY,
-     skill_id INT NOT NULL,
-     staff_id INT NOT NULL,
-     foreign key (skill_id) references skill (id),
-     foreign key (staff_id) references staff (user_id)
 );
 
 

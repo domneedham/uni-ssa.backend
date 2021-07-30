@@ -24,5 +24,5 @@ public class Category {
     private String name;
 
     @Column(name = CategoryConstants.ICON)
-    private String icon;
+    private Integer icon;
 }
