@@ -9,6 +9,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 
 @Entity
@@ -35,8 +36,8 @@ public class StaffSkill {
     private Integer rating;
 
     @Column(name = StaffSkillConstants.LAST_UPDATED)
-    private ZonedDateTime lastUpdated;
+    private LocalDateTime lastUpdated;
 
     @Column(name = StaffSkillConstants.EXPIRES)
-    private ZonedDateTime expires;
+    private LocalDateTime expires;
 }

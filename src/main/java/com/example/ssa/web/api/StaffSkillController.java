@@ -26,8 +26,13 @@ public class StaffSkillController {
         return skillRepository.findById(id);
     }
 
+    @GetMapping("{id}/sid/{sid}")
+    public Optional<StaffSkill> findBySkillIdAndStaffId(@PathVariable("id") long id, @PathVariable("sid") long sid) {
+        return skillRepository.findBySkillIdAndStaffDetailsId(id, sid);
+    }
+
     @GetMapping("/sid/{id}")
-    public List<StaffSkill> findByStaffId(@PathVariable("id") long id) {
+    public List<StaffSkill> findAllByStaffId(@PathVariable("id") long id) {
         return skillRepository.findByStaffDetailsId(id);
     }
 
@@ -37,12 +42,16 @@ public class StaffSkillController {
     }
 
     @PutMapping("/update")
-    public StaffSkill update(@RequestBody StaffSkill skill) {
-        StaffSkill skillToUpdate = skillRepository.getById(skill.getId());
+    public StaffSkill update(@RequestBody StaffSkill skill) throws Exception {
+        Optional<StaffSkill> skillToUpdate = this.findBySkillIdAndStaffId(skill.getSkill().getId(), skill.getStaffDetails().getId());
 
-        skillToUpdate.setRating(skill.getRating());
-        skillToUpdate.setExpires(skill.getExpires());
+        if (skillToUpdate.isEmpty()) {
+            throw new Exception("Not found");
+        }
 
-        return skillRepository.save(skillToUpdate);
+        skillToUpdate.get().setRating(skill.getRating());
+        skillToUpdate.get().setExpires(skill.getExpires());
+
+        return skillRepository.save(skillToUpdate.get());
     }
 }
