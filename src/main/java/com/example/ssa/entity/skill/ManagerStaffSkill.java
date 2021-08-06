@@ -3,16 +3,16 @@ package com.example.ssa.entity.skill;
 import com.example.ssa.entity.skill.constants.ManagerStaffSkillConstants;
 import com.example.ssa.entity.user.AppUser;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
 @Table(name = ManagerStaffSkillConstants.TABLE_NAME)
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Getter
 @Setter
 @ToString

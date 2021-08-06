@@ -2,16 +2,16 @@ package com.example.ssa.entity.user;
 
 import com.example.ssa.entity.user.constants.AppUserConstants;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.annotations.Formula;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = AppUserConstants.TABLE_NAME)
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Getter
 @Setter
 @ToString

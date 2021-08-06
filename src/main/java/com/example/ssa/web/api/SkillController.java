@@ -3,8 +3,10 @@ package com.example.ssa.web.api;
 import com.example.ssa.entity.skill.Skill;
 import com.example.ssa.repository.SkillRepository;
 import com.example.ssa.repository.StaffSkillRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import javax.swing.text.html.Option;
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
@@ -26,8 +28,14 @@ public class SkillController {
     }
 
     @GetMapping("/{id}")
-    public Optional<Skill> findById(@PathVariable("id") long id) {
-        return skillRepository.findById(id);
+    public Optional<Skill> findById(@PathVariable("id") long id) throws Exception {
+        Optional<Skill> skill = skillRepository.findById(id);
+
+        if (skill.isEmpty()) {
+            throw new SkillDoesNotExistException("Skill not found with that id");
+        }
+
+        return skill;
     }
 
     @GetMapping("/search/{name}")
@@ -41,14 +49,33 @@ public class SkillController {
     }
 
     @PutMapping("/update")
-    public Skill update(@RequestBody Skill skill) {
+    public Skill update(@RequestBody Skill skill) throws Exception {
+        Optional<Skill> skillToUpdate = skillRepository.findById(skill.getId());
+
+        if (skillToUpdate.isEmpty()) {
+            throw new SkillDoesNotExistException("Skill not found with that id");
+        }
+
         return skillRepository.save(skill);
     }
 
     @DeleteMapping("/delete/{id}")
     @Transactional
-    public void delete(@PathVariable("id") long id) {
+    public void delete(@PathVariable("id") Long id) {
+        Optional<Skill> skillToDelete = skillRepository.findById(id);
+
+        if (skillToDelete.isEmpty()) {
+            throw new SkillDoesNotExistException("Skill not found with that id");
+        }
+
         staffSkillRepository.deleteAllBySkillId(id);
         skillRepository.deleteById(id);
+    }
+}
+
+@ResponseStatus(HttpStatus.BAD_REQUEST)
+class SkillDoesNotExistException extends RuntimeException {
+    public SkillDoesNotExistException(String value) {
+        super(value);
     }
 }

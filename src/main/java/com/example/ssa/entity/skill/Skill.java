@@ -1,15 +1,15 @@
 package com.example.ssa.entity.skill;
 
 import com.example.ssa.entity.skill.constants.SkillConstants;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = SkillConstants.TABLE_NAME)
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Getter
 @Setter
 @ToString

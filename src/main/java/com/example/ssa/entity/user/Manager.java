@@ -1,16 +1,16 @@
 package com.example.ssa.entity.user;
 
 import com.example.ssa.entity.user.constants.ManagerConstants;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
 @Table(name= ManagerConstants.TABLE_NAME)
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Getter
 @Setter
 @ToString

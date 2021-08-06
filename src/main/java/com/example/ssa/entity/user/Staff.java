@@ -2,10 +2,7 @@ package com.example.ssa.entity.user;
 
 import com.example.ssa.entity.skill.StaffSkill;
 import com.example.ssa.entity.user.constants.StaffConstants;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -13,6 +10,9 @@ import java.util.List;
 
 @Entity
 @Table(name= StaffConstants.TABLE_NAME)
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Getter
 @Setter
 @ToString

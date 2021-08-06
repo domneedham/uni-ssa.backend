@@ -1,15 +1,15 @@
 package com.example.ssa.entity.skill;
 
 import com.example.ssa.entity.skill.constants.CategoryConstants;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = CategoryConstants.TABLE_NAME)
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Getter
 @Setter
 @ToString
