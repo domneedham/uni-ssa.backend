@@ -1,11 +1,9 @@
 package com.example.ssa.web.api;
 
 import com.example.ssa.entity.skill.ManagerStaffSkill;
-import com.example.ssa.entity.user.AppUser;
 import com.example.ssa.repository.ManagerStaffSkillRepository;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
