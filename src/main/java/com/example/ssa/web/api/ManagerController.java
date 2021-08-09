@@ -1,6 +1,7 @@
 package com.example.ssa.web.api;
 
 import com.example.ssa.entity.user.Manager;
+import com.example.ssa.exceptions.requests.bad.ManagerDoesNotExistException;
 import com.example.ssa.repository.ManagerRepository;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,7 +24,13 @@ public class ManagerController {
 
     @GetMapping("/{id}")
     public Optional<Manager> findById(@PathVariable(value = "id") Long id) {
-        return managerRepository.findById(id);
+        Optional<Manager> manager = managerRepository.findById(id);
+
+        if (manager.isEmpty()) {
+            throw new ManagerDoesNotExistException("Manager not found with that id");
+        }
+
+        return manager;
     }
 
     @GetMapping("/search/{name}")
