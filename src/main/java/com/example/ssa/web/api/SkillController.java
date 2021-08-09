@@ -1,12 +1,11 @@
 package com.example.ssa.web.api;
 
 import com.example.ssa.entity.skill.Skill;
+import com.example.ssa.exceptions.requests.bad.SkillDoesNotExistException;
 import com.example.ssa.repository.SkillRepository;
 import com.example.ssa.repository.StaffSkillRepository;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import javax.swing.text.html.Option;
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
@@ -28,7 +27,7 @@ public class SkillController {
     }
 
     @GetMapping("/{id}")
-    public Optional<Skill> findById(@PathVariable("id") long id) throws Exception {
+    public Optional<Skill> findById(@PathVariable("id") long id) throws RuntimeException {
         Optional<Skill> skill = skillRepository.findById(id);
 
         if (skill.isEmpty()) {
@@ -73,9 +72,4 @@ public class SkillController {
     }
 }
 
-@ResponseStatus(HttpStatus.BAD_REQUEST)
-class SkillDoesNotExistException extends RuntimeException {
-    public SkillDoesNotExistException(String value) {
-        super(value);
-    }
-}
+

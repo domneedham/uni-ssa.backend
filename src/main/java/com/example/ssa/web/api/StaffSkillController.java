@@ -1,6 +1,7 @@
 package com.example.ssa.web.api;
 
 import com.example.ssa.entity.skill.StaffSkill;
+import com.example.ssa.exceptions.requests.bad.StaffSkillDoesNotExistException;
 import com.example.ssa.repository.StaffSkillRepository;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,13 +23,25 @@ public class StaffSkillController {
     }
 
     @GetMapping("/{id}")
-    public Optional<StaffSkill> findById(@PathVariable("id") long id) {
-        return skillRepository.findById(id);
+    public Optional<StaffSkill> findById(@PathVariable("id") long id) throws RuntimeException {
+        Optional<StaffSkill> skill = skillRepository.findById(id);
+
+        if (skill.isEmpty()) {
+            throw new StaffSkillDoesNotExistException("Staff skill not found with that id");
+        }
+
+        return skill;
     }
 
     @GetMapping("{id}/sid/{sid}")
     public Optional<StaffSkill> findBySkillIdAndStaffId(@PathVariable("id") long id, @PathVariable("sid") long sid) {
-        return skillRepository.findBySkillIdAndStaffDetailsId(id, sid);
+        Optional<StaffSkill> skill = skillRepository.findBySkillIdAndStaffDetailsId(id, sid);
+
+        if (skill.isEmpty()) {
+            throw new StaffSkillDoesNotExistException("Staff skill not found with that id");
+        }
+
+        return skill;                                                                                                                                                                                                                                                
     }
 
     @GetMapping("/sid/{id}")

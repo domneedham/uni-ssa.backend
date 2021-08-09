@@ -2,6 +2,7 @@ package com.example.ssa.web.api;
 
 import com.example.ssa.entity.skill.Category;
 import com.example.ssa.entity.skill.Skill;
+import com.example.ssa.exceptions.requests.bad.SkillDoesNotExistException;
 import com.example.ssa.repository.SkillRepository;
 import com.example.ssa.repository.StaffSkillRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
