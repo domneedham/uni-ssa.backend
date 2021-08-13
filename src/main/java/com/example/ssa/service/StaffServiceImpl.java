@@ -47,11 +47,7 @@ public class StaffServiceImpl implements StaffService {
     public Staff createStaff(Staff staff) {
         // check manager id is manager
         Optional<AppUser> manager = appUserRepository.findById(staff.getManagerDetails().getId());
-        if (manager.isPresent()) {
-            if (manager.get().getUserRole() == UserRole.STAFF) {
-                throw new ManagerDoesNotExistException("Manager not found with that id");
-            }
-        } else {
+        if (manager.isEmpty() || manager.get().getUserRole() == UserRole.STAFF) {
             throw new ManagerDoesNotExistException("Manager not found with that id");
         }
         return staffRepository.save(staff);

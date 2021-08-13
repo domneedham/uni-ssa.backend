@@ -4,7 +4,7 @@ import com.example.ssa.entity.user.AppUser;
 import com.example.ssa.entity.user.Manager;
 import com.example.ssa.entity.user.UserRole;
 import com.example.ssa.exceptions.requests.bad.ManagerDoesNotExistException;
-import com.example.ssa.repository.ManagerRepository;
+import com.example.ssa.service.ManagerService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +33,7 @@ public class ManagerControllerTest {
     ObjectMapper mapper;
 
     @MockBean
-    ManagerRepository managerRepository;
+    ManagerService managerService;
 
     AppUser appUserManagerOne = new AppUser(3L, "Test", "User", "test@user.com", "password",UserRole.MANAGER, "Test User");
     AppUser appUserManagerTwo = new AppUser(3L, "Test", "Manager", "test@manager.com","password", UserRole.MANAGER, "Test Manager");
@@ -50,7 +50,7 @@ public class ManagerControllerTest {
     public void findAllManagers_success() throws Exception {
         List<Manager> records = new ArrayList<>(List.of(managerOne, managerTwo));
 
-        when(managerRepository.findAll()).thenReturn(records);
+        when(managerService.findAllManagers()).thenReturn(records);
 
         mockMvc.perform(MockMvcRequestBuilders
                         .get("/api/manager/")
@@ -63,7 +63,7 @@ public class ManagerControllerTest {
 
     @Test
     public void findById_success() throws Exception {
-        when(managerRepository.findById(1L)).thenReturn(java.util.Optional.ofNullable(managerOne));
+        when(managerService.findManagerById(1L)).thenReturn(java.util.Optional.ofNullable(managerOne));
 
         mockMvc.perform(MockMvcRequestBuilders
                         .get("/api/manager/1")
@@ -75,7 +75,7 @@ public class ManagerControllerTest {
 
     @Test
     public void findById_notFound() throws Exception {
-        when(managerRepository.findById(1L)).thenReturn(java.util.Optional.empty());
+        when(managerService.findManagerById(1L)).thenThrow(new ManagerDoesNotExistException("Manager not found with that id"));
 
         mockMvc.perform(MockMvcRequestBuilders
                         .get("/api/manager/1")
@@ -90,7 +90,7 @@ public class ManagerControllerTest {
     @Test
     public void findByName_success() throws Exception {
         List<Manager> records = new ArrayList<>(List.of(managerOne, managerTwo));
-        when(managerRepository.findAllByUserDetailsNameContainingIgnoreCase("test")).thenReturn(records);
+        when(managerService.findManagersByName("test")).thenReturn(records);
 
         mockMvc.perform(MockMvcRequestBuilders
                         .get("/api/manager/search/test")
@@ -104,10 +104,10 @@ public class ManagerControllerTest {
     @Test
     public void findByName_noMatch() throws Exception {
         List<Manager> records = new ArrayList<>(List.of());
-        when(managerRepository.findAllByUserDetailsNameContainingIgnoreCase("testyuser")).thenReturn(records);
+        when(managerService.findManagersByName("test")).thenReturn(records);
 
         mockMvc.perform(MockMvcRequestBuilders
-                        .get("/api/manager/search/testyuser")
+                        .get("/api/manager/search/test")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(0)));

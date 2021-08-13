@@ -8,10 +8,10 @@ import com.example.ssa.entity.user.Staff;
 import com.example.ssa.entity.user.UserRole;
 import com.example.ssa.exceptions.requests.bad.ManagerDoesNotExistException;
 import com.example.ssa.exceptions.requests.bad.StaffDoesNotExistException;
-import com.example.ssa.repository.AppUserRepository;
-import com.example.ssa.repository.StaffRepository;
+import com.example.ssa.service.StaffService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentMatchers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -40,9 +40,7 @@ public class StaffControllerTest {
     ObjectMapper mapper;
 
     @MockBean
-    StaffRepository staffRepository;
-    @MockBean
-    AppUserRepository appUserRepository;
+    StaffService staffService;
 
     AppUser appUserManager = new AppUser(3L, "Test", "User", "test@user.com", "password", UserRole.MANAGER, "Test User");
     AppUser appUserStaffOne = new AppUser(1L, "Test", "User", "test@user.com","password", UserRole.STAFF, "Test User");
@@ -69,7 +67,7 @@ public class StaffControllerTest {
     public void findAllStaff_success() throws Exception {
         List<Staff> records = new ArrayList<>(List.of(staffOne, staffTwo));
 
-        when(staffRepository.findAll()).thenReturn(records);
+        when(staffService.findAllStaff()).thenReturn(records);
 
         mockMvc.perform(MockMvcRequestBuilders
                         .get("/api/staff/")
@@ -82,7 +80,7 @@ public class StaffControllerTest {
 
     @Test
     public void findById_success() throws Exception {
-        when(staffRepository.findById(1L)).thenReturn(java.util.Optional.ofNullable(staffOne));
+        when(staffService.findStaffById(1L)).thenReturn(java.util.Optional.ofNullable(staffOne));
 
         mockMvc.perform(MockMvcRequestBuilders
                         .get("/api/staff/1")
@@ -94,7 +92,7 @@ public class StaffControllerTest {
 
     @Test
     public void findById_notFound() throws Exception {
-        when(staffRepository.findById(1L)).thenReturn(java.util.Optional.empty());
+        when(staffService.findStaffById(1L)).thenThrow(new StaffDoesNotExistException("Staff not found with that id"));
 
         mockMvc.perform(MockMvcRequestBuilders
                         .get("/api/staff/1")
@@ -109,7 +107,7 @@ public class StaffControllerTest {
     @Test
     public void findByName_success() throws Exception {
         List<Staff> records = new ArrayList<>(List.of(staffOne, staffTwo));
-        when(staffRepository.findAllByUserDetailsNameContainingIgnoreCase("test")).thenReturn(records);
+        when(staffService.findStaffByName("test")).thenReturn(records);
 
         mockMvc.perform(MockMvcRequestBuilders
                         .get("/api/staff/search/test")
@@ -123,10 +121,10 @@ public class StaffControllerTest {
     @Test
     public void findByName_noMatch() throws Exception {
         List<Staff> records = new ArrayList<>(List.of());
-        when(staffRepository.findAllByUserDetailsNameContainingIgnoreCase("testyuser")).thenReturn(records);
+        when(staffService.findStaffByName("test")).thenReturn(records);
 
         mockMvc.perform(MockMvcRequestBuilders
-                        .get("/api/staff/search/testyuser")
+                        .get("/api/staff/search/test")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(0)));
@@ -140,8 +138,7 @@ public class StaffControllerTest {
                 .skills(staffSkillsEmpty)
                 .build();
 
-        when(staffRepository.save(staff)).thenReturn(staff);
-        when(appUserRepository.findById(3L)).thenReturn(java.util.Optional.ofNullable(appUserManager));
+        when(staffService.createStaff(ArgumentMatchers.any())).thenReturn(staff);
 
         MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders.post("/api/staff/create")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -149,9 +146,9 @@ public class StaffControllerTest {
                 .content(this.mapper.writeValueAsString(staff));
 
         mockMvc.perform(mockRequest)
-                .andExpect(status().isOk());
-//                .andExpect(jsonPath("$", notNullValue()))
-//                .andExpect(jsonPath("$.userDetails.surname", is(staffOne.getUserDetails().getSurname())));
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", notNullValue()))
+                .andExpect(jsonPath("$.userDetails.surname", is(staffOne.getUserDetails().getSurname())));
     }
 
     @Test
@@ -162,8 +159,7 @@ public class StaffControllerTest {
                 .skills(staffSkillsEmpty)
                 .build();
 
-        when(staffRepository.save(staff)).thenReturn(staff);
-        when(appUserRepository.findById(3L)).thenReturn(java.util.Optional.empty());
+        when(staffService.createStaff(ArgumentMatchers.any())).thenThrow(new ManagerDoesNotExistException("Manager not found with that id"));
 
         MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders.post("/api/staff/create")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -187,8 +183,7 @@ public class StaffControllerTest {
                 .skills(staffSkillsEmpty)
                 .build();
 
-        when(staffRepository.save(staff)).thenReturn(staff);
-        when(staffRepository.findById(1L)).thenReturn(java.util.Optional.ofNullable(staffOne));
+        when(staffService.updateStaff(ArgumentMatchers.any())).thenReturn(staff);
 
         MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders.put("/api/staff/update")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -196,9 +191,9 @@ public class StaffControllerTest {
                 .content(this.mapper.writeValueAsString(staff));
 
         mockMvc.perform(mockRequest)
-                .andExpect(status().isOk());
-//                .andExpect(jsonPath("$", notNullValue()))
-//                .andExpect(jsonPath("$.userDetails.surname", is(appUserStaffOne.getSurname())));
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", notNullValue()))
+                .andExpect(jsonPath("$.userDetails.surname", is(appUserStaffTwo.getSurname())));
     }
 
     @Test
@@ -209,8 +204,7 @@ public class StaffControllerTest {
                 .skills(staffSkillsEmpty)
                 .build();
 
-        when(staffRepository.save(staff)).thenReturn(staff);
-        when(staffRepository.findById(1L)).thenReturn(java.util.Optional.empty());
+        when(staffService.updateStaff(ArgumentMatchers.any())).thenThrow(new StaffDoesNotExistException("Staff not found with that id"));
 
         MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders.put("/api/staff/update")
                 .contentType(MediaType.APPLICATION_JSON)

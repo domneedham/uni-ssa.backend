@@ -21,7 +21,7 @@ public class StaffController {
     }
 
     @GetMapping("/{id}")
-    public Optional<Staff> findById(@PathVariable(value = "id") Long id) throws RuntimeException {
+    public Optional<Staff> findById(@PathVariable(value = "id") Long id) {
         return staffService.findStaffById(id);
     }
 
@@ -31,12 +31,12 @@ public class StaffController {
     }
 
     @PostMapping("/create")
-    public Staff create(@RequestBody Staff staff) throws RuntimeException {
+    public Staff create(@RequestBody Staff staff) {
         return staffService.createStaff(staff);
     }
 
     @PutMapping("/update")
-    public Staff update(@RequestBody Staff staff) throws RuntimeException {
+    public Staff update(@RequestBody Staff staff) {
         return staffService.updateStaff(staff);
     }
 }

@@ -7,6 +7,7 @@ import com.example.ssa.entity.user.AppUser;
 import com.example.ssa.entity.user.UserRole;
 import com.example.ssa.exceptions.requests.bad.ManagerStaffSkillDoesNotExistException;
 import com.example.ssa.repository.ManagerStaffSkillRepository;
+import com.example.ssa.service.ManagerStaffSkillService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +36,7 @@ public class ManagerStaffSkillControllerTest {
     ObjectMapper mapper;
 
     @MockBean
-    ManagerStaffSkillRepository managerStaffSkillRepository;
+    ManagerStaffSkillService managerStaffSkillService;
 
     AppUser appUserOne = new AppUser(1L, "Test", "User", "test@user.com", "password", UserRole.STAFF, "Test User");
     AppUser appUserTwo = new AppUser(2L, "Test", "Two", "test@two.com", "password", UserRole.STAFF, "Test Two");
@@ -51,7 +52,7 @@ public class ManagerStaffSkillControllerTest {
     public void findAllManagerStaffSkills_success() throws Exception {
         List<ManagerStaffSkill> records = new ArrayList<>(List.of(managerStaffSkillOne, managerStaffSkillTwo));
 
-        when(managerStaffSkillRepository.findAll()).thenReturn(records);
+        when(managerStaffSkillService.findAllManagerStaffSkills()).thenReturn(records);
 
         mockMvc.perform(MockMvcRequestBuilders
                 .get("/api/skill/manager/")
@@ -65,7 +66,7 @@ public class ManagerStaffSkillControllerTest {
     public void findAllManagerStaffSkills_empty() throws Exception {
         List<ManagerStaffSkill> records = new ArrayList<>(List.of());
 
-        when(managerStaffSkillRepository.findAll()).thenReturn(records);
+        when(managerStaffSkillService.findAllManagerStaffSkills()).thenReturn(records);
 
         mockMvc.perform(MockMvcRequestBuilders
                         .get("/api/skill/manager/")
@@ -76,7 +77,7 @@ public class ManagerStaffSkillControllerTest {
 
     @Test
     public void findById_success() throws Exception {
-        when(managerStaffSkillRepository.findById(1L)).thenReturn(java.util.Optional.ofNullable(managerStaffSkillOne));
+        when(managerStaffSkillService.findManagerStaffSkillById(1L)).thenReturn(java.util.Optional.ofNullable(managerStaffSkillOne));
 
         mockMvc.perform(MockMvcRequestBuilders
                         .get("/api/skill/manager/1")
@@ -88,7 +89,7 @@ public class ManagerStaffSkillControllerTest {
 
     @Test
     public void findById_notFound() throws Exception {
-        when(managerStaffSkillRepository.findById(1L)).thenReturn(java.util.Optional.empty());
+        when(managerStaffSkillService.findManagerStaffSkillById(1L)).thenThrow(new ManagerStaffSkillDoesNotExistException("Skill not found with that id"));
 
         mockMvc.perform(MockMvcRequestBuilders
                 .get("/api/skill/manager/1")

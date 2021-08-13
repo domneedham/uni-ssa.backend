@@ -6,9 +6,10 @@ import com.example.ssa.entity.skill.StaffSkill;
 import com.example.ssa.entity.user.AppUser;
 import com.example.ssa.entity.user.UserRole;
 import com.example.ssa.exceptions.requests.bad.StaffSkillDoesNotExistException;
-import com.example.ssa.repository.StaffSkillRepository;
+import com.example.ssa.service.StaffSkillService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentMatchers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -19,7 +20,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -39,7 +39,7 @@ public class StaffSkillControllerTest {
     ObjectMapper mapper;
 
     @MockBean
-    StaffSkillRepository staffSkillRepository;
+    StaffSkillService staffSkillService;
 
     Category categoryOne = new Category(1L, "Category One", 57718);
     Category categoryTwo = new Category(2L, "Category Two", 57718);
@@ -55,9 +55,9 @@ public class StaffSkillControllerTest {
 
     @Test
     public void findAllStaffSkills_success() throws Exception {
-        List<StaffSkill> records = new ArrayList<>(Arrays.asList(staffSkillOne, staffSkillTwo));
+        List<StaffSkill> records = new ArrayList<>(List.of(staffSkillOne, staffSkillTwo));
 
-        when(staffSkillRepository.findAll()).thenReturn(records);
+        when(staffSkillService.findAllStaffSkills()).thenReturn(records);
 
         mockMvc.perform(MockMvcRequestBuilders
                         .get("/api/skill/staff/")
@@ -69,8 +69,21 @@ public class StaffSkillControllerTest {
     }
 
     @Test
+    public void findAllStaffSkills_empty() throws Exception {
+        List<StaffSkill> records = new ArrayList<>(List.of());
+
+        when(staffSkillService.findAllStaffSkills()).thenReturn(records);
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get("/api/skill/staff/")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(0)));
+    }
+
+    @Test
     public void findById_success() throws Exception {
-        when(staffSkillRepository.findById(1L)).thenReturn(java.util.Optional.ofNullable(staffSkillOne));
+        when(staffSkillService.findStaffSkillById(1L)).thenReturn(java.util.Optional.ofNullable(staffSkillOne));
 
         mockMvc.perform(MockMvcRequestBuilders
                         .get("/api/skill/staff/1")
@@ -83,7 +96,7 @@ public class StaffSkillControllerTest {
 
     @Test
     public void findById_notFound() throws Exception {
-        when(staffSkillRepository.findById(1L)).thenReturn(java.util.Optional.empty());
+        when(staffSkillService.findStaffSkillById(1L)).thenThrow(new StaffSkillDoesNotExistException("Staff skill not found with that id"));
 
         mockMvc.perform(MockMvcRequestBuilders
                         .get("/api/skill/staff/1")
@@ -97,7 +110,7 @@ public class StaffSkillControllerTest {
 
     @Test
     public void findBySkillIdAndStaffId_success() throws Exception {
-        when(staffSkillRepository.findBySkillIdAndStaffDetailsId(1L, 1L)).thenReturn(java.util.Optional.ofNullable(staffSkillOne));
+        when(staffSkillService.findStaffSkillBySkillIdAndStaffId(1L, 1L)).thenReturn(java.util.Optional.ofNullable(staffSkillOne));
 
         mockMvc.perform(MockMvcRequestBuilders
                         .get("/api/skill/staff/1/sid/1")
@@ -110,7 +123,7 @@ public class StaffSkillControllerTest {
 
     @Test
     public void findBySkillIdAndStaffId_notFound() throws Exception {
-        when(staffSkillRepository.findBySkillIdAndStaffDetailsId(1L, 1L)).thenReturn(java.util.Optional.empty());
+        when(staffSkillService.findStaffSkillBySkillIdAndStaffId(1L, 1L)).thenThrow(new StaffSkillDoesNotExistException("Staff skill not found with that id"));
 
         mockMvc.perform(MockMvcRequestBuilders
                         .get("/api/skill/staff/1/sid/1")
@@ -126,7 +139,7 @@ public class StaffSkillControllerTest {
     public void findAllStaffSkillsByStaffId_success() throws Exception {
         List<StaffSkill> records = new ArrayList<>(List.of(staffSkillOne));
 
-        when(staffSkillRepository.findByStaffDetailsId(1L)).thenReturn(records);
+        when(staffSkillService.findAllStaffSkillsByStaffId(1L)).thenReturn(records);
 
         mockMvc.perform(MockMvcRequestBuilders
                         .get("/api/skill/staff/sid/1")
@@ -137,53 +150,52 @@ public class StaffSkillControllerTest {
                 .andExpect(jsonPath("$[0].staffDetails.firstname", is("Test")));
     }
 
-//    @Test
-//    public void assignStaffSkill_success() throws Exception {
-//        StaffSkill skill = StaffSkill.builder()
-//                .skill(skillOne)
-//                .staffDetails(appUserOne)
-//                .rating(5)
-//                .lastUpdated(LocalDateTime.now())
-//                .expires(LocalDateTime.now().plusDays(30))
-//                .build();
-//
-//        when(staffSkillRepository.save(skill)).thenReturn(skill);
-//
-//        MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders.post("/api/skill/staff/assign")
-//                .contentType(MediaType.APPLICATION_JSON)
-//                .accept(MediaType.APPLICATION_JSON)
-//                .content(this.mapper.writeValueAsString(skill));
-//
-//        mockMvc.perform(mockRequest)
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$", notNullValue()))
-//                .andExpect(jsonPath("$.skill.name", is("Skill One")))
-//                .andExpect(jsonPath("$.staffDetails.firstname", is("Test")));
-//    }
-//
-//    @Test
-//    public void updateStaffSkill_success() throws Exception {
-//        StaffSkill skill = StaffSkill.builder()
-//                .id(1L)
-//                .skill(skillOne)
-//                .staffDetails(appUserOne)
-//                .rating(5)
-//                .lastUpdated(LocalDateTime.now())
-//                .expires(LocalDateTime.now().plusDays(30))
-//                .build();
-//
-//        when(staffSkillRepository.save(skill)).thenReturn(skill);
-//        when(staffSkillRepository.findBySkillIdAndStaffDetailsId(1L, 1L)).thenReturn(java.util.Optional.of(skill));
-//
-//        MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders.put("/api/skill/update")
-//                .contentType(MediaType.APPLICATION_JSON)
-//                .accept(MediaType.APPLICATION_JSON)
-//                .content(this.mapper.writeValueAsString(skill));
-//
-//        mockMvc.perform(mockRequest)
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$", notNullValue()))
-//                .andExpect(jsonPath("$.skill.name", is("Skill One")))
-//                .andExpect(jsonPath("$.staffDetails.firstname", is("Test")));
-//    }
+    @Test
+    public void assignStaffSkill_success() throws Exception {
+        StaffSkill skill = StaffSkill.builder()
+                .skill(skillOne)
+                .staffDetails(appUserOne)
+                .rating(5)
+                .lastUpdated(LocalDateTime.now())
+                .expires(LocalDateTime.now().plusDays(30))
+                .build();
+
+        when(staffSkillService.assignStaffSkill(ArgumentMatchers.any())).thenReturn(skill);
+
+        MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders.post("/api/skill/staff/assign")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(this.mapper.writeValueAsString(skill));
+
+        mockMvc.perform(mockRequest)
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", notNullValue()))
+                .andExpect(jsonPath("$.skill.name", is("Skill One")))
+                .andExpect(jsonPath("$.staffDetails.firstname", is("Test")));
+    }
+
+    @Test
+    public void updateStaffSkill_success() throws Exception {
+        StaffSkill skill = StaffSkill.builder()
+                .id(1L)
+                .skill(skillOne)
+                .staffDetails(appUserOne)
+                .rating(5)
+                .lastUpdated(LocalDateTime.now())
+                .expires(LocalDateTime.now().plusDays(30))
+                .build();
+
+        when(staffSkillService.updateStaffSkill(ArgumentMatchers.any())).thenReturn(skill);
+
+        MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders.put("/api/skill/staff/update")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(this.mapper.writeValueAsString(skill));
+
+        mockMvc.perform(mockRequest)
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", notNullValue()))
+                .andExpect(jsonPath("$.skill.name", is("Skill One")))
+                .andExpect(jsonPath("$.staffDetails.firstname", is("Test")));
+    }
 }

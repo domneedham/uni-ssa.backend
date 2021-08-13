@@ -9,6 +9,7 @@ import com.example.ssa.exceptions.requests.bad.CategoryDoesNotExistException;
 import com.example.ssa.repository.CategoryRepository;
 import com.example.ssa.repository.SkillRepository;
 import com.example.ssa.repository.StaffSkillRepository;
+import com.example.ssa.service.CategoryService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,11 +40,7 @@ public class CategoryControllerTest {
     ObjectMapper mapper;
 
     @MockBean
-    CategoryRepository categoryRepository;
-    @MockBean
-    SkillRepository skillRepository;
-    @MockBean
-    StaffSkillRepository staffSkillRepository;
+    CategoryService categoryService;
 
     Category categoryOne = new Category(1L, "Test Category One", 26932);
     Category categoryTwo = new Category(2L, "Test Category Two", 19165);
@@ -58,7 +55,7 @@ public class CategoryControllerTest {
     public void findAllCategories_success() throws Exception {
         List<Category> records = new ArrayList<>(List.of(categoryOne, categoryTwo));
 
-        when(categoryRepository.findAll()).thenReturn(records);
+        when(categoryService.findAllCategories()).thenReturn(records);
 
         mockMvc.perform(MockMvcRequestBuilders
                         .get("/api/category/")
@@ -72,7 +69,7 @@ public class CategoryControllerTest {
     public void findAllCategories_empty() throws Exception {
         List<Category> records = new ArrayList<>(List.of());
 
-        when(categoryRepository.findAll()).thenReturn(records);
+        when(categoryService.findAllCategories()).thenReturn(records);
 
         mockMvc.perform(MockMvcRequestBuilders
                         .get("/api/category/")
@@ -83,7 +80,7 @@ public class CategoryControllerTest {
 
     @Test
     public void findById_success() throws Exception {
-        when(categoryRepository.findById(1L)).thenReturn(java.util.Optional.ofNullable(categoryOne));
+        when(categoryService.findCategoryById(1L)).thenReturn(java.util.Optional.ofNullable(categoryOne));
 
         mockMvc.perform(MockMvcRequestBuilders
                         .get("/api/category/1")
@@ -95,7 +92,7 @@ public class CategoryControllerTest {
 
     @Test
     public void findById_notFound() throws Exception {
-        when(categoryRepository.findById(1L)).thenReturn(java.util.Optional.empty());
+        when(categoryService.findCategoryById(1L)).thenThrow(new CategoryDoesNotExistException("Category not found with that id"));
 
         mockMvc.perform(MockMvcRequestBuilders
                         .get("/api/category/1")
@@ -113,7 +110,7 @@ public class CategoryControllerTest {
                 .name(categoryOne.getName())
                 .icon(categoryOne.getIcon())
                 .build();
-        when(categoryRepository.save(category)).thenReturn(category);
+        when(categoryService.createCategory(category)).thenReturn(category);
 
         MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders.post("/api/category/create")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -134,8 +131,7 @@ public class CategoryControllerTest {
                 .icon(categoryOne.getIcon())
                 .build();
 
-        when(categoryRepository.save(category)).thenReturn(category);
-        when(categoryRepository.findById(1L)).thenReturn(java.util.Optional.ofNullable(categoryOne));
+        when(categoryService.updateCategory(category)).thenReturn(category);
 
         MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders.put("/api/category/update")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -155,8 +151,7 @@ public class CategoryControllerTest {
                 .icon(categoryOne.getIcon())
                 .build();
 
-        when(categoryRepository.save(category)).thenReturn(category);
-        when(categoryRepository.findById(1L)).thenReturn(java.util.Optional.empty());
+        when(categoryService.updateCategory(any())).thenThrow(new CategoryDoesNotExistException("Category not found with that id"));
 
         MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders.put("/api/category/update")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -173,22 +168,15 @@ public class CategoryControllerTest {
 
     @Test
     public void deleteCategory_success() throws Exception {
-        when(categoryRepository.findById(1L)).thenReturn(java.util.Optional.ofNullable(categoryOne));
-        when(skillRepository.findAllByCategoryId(any())).thenReturn(List.of());
-
         mockMvc.perform(MockMvcRequestBuilders
                         .delete("/api/category/delete/1")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
-        verify(skillRepository, times(1)).findAllByCategoryId(any());
-        verify(skillRepository, times(1)).deleteAllByCategoryId(any());
-        verify(staffSkillRepository, times(1)).deleteAllBySkillIdIsIn(any());
-        verify(categoryRepository, times(1)).deleteById(any());
     }
 
     @Test
     public void deleteCategory_notFound() throws Exception {
-        when(categoryRepository.findById(1L)).thenReturn(java.util.Optional.empty());
+        doThrow(new CategoryDoesNotExistException("Category not found with that id")).when(categoryService).deleteCategoryById(1L);
 
         mockMvc.perform(MockMvcRequestBuilders
                         .delete("/api/category/delete/1")
@@ -198,9 +186,5 @@ public class CategoryControllerTest {
                 .andExpect(result -> assertEquals("Category not found with that id",
                         Objects.requireNonNull(result.getResolvedException()).getMessage())
                 );
-        verify(skillRepository, never()).findAllByCategoryId(any());
-        verify(skillRepository, never()).deleteAllByCategoryId(any());
-        verify(staffSkillRepository, never()).deleteAllBySkillIdIsIn(any());
-        verify(categoryRepository, never()).deleteById(any());
     }
 }
