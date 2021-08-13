@@ -27,7 +27,7 @@ import java.util.Objects;
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -173,20 +173,21 @@ public class CategoryControllerTest {
 
     @Test
     public void deleteCategory_success() throws Exception {
-        // TODO
-        // TEST THE DELETE METHODS ARE CALLED FOR SKILL AND STAFFSKILL REPOSITORIES
         when(categoryRepository.findById(1L)).thenReturn(java.util.Optional.ofNullable(categoryOne));
+        when(skillRepository.findAllByCategoryId(any())).thenReturn(List.of());
 
         mockMvc.perform(MockMvcRequestBuilders
                         .delete("/api/category/delete/1")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
+        verify(skillRepository, times(1)).findAllByCategoryId(any());
+        verify(skillRepository, times(1)).deleteAllByCategoryId(any());
+        verify(staffSkillRepository, times(1)).deleteAllBySkillIdIsIn(any());
+        verify(categoryRepository, times(1)).deleteById(any());
     }
 
     @Test
     public void deleteCategory_notFound() throws Exception {
-        // TODO
-        // TEST THE DELETE METHODS ARE NOT CALLED FOR SKILL AND STAFFSKILL REPOSITORIES
         when(categoryRepository.findById(1L)).thenReturn(java.util.Optional.empty());
 
         mockMvc.perform(MockMvcRequestBuilders
@@ -197,5 +198,9 @@ public class CategoryControllerTest {
                 .andExpect(result -> assertEquals("Category not found with that id",
                         Objects.requireNonNull(result.getResolvedException()).getMessage())
                 );
+        verify(skillRepository, never()).findAllByCategoryId(any());
+        verify(skillRepository, never()).deleteAllByCategoryId(any());
+        verify(staffSkillRepository, never()).deleteAllBySkillIdIsIn(any());
+        verify(categoryRepository, never()).deleteById(any());
     }
 }
