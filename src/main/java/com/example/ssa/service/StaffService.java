@@ -9,6 +9,7 @@ public interface StaffService {
     List<Staff> findAllStaff();
     Optional<Staff> findStaffById(Long id);
     List<Staff> findStaffByName(String name);
+    Optional<Staff> findStaffByEmail(String email);
     Staff createStaff(Staff staff);
     Staff updateStaff(Staff staff);
 }

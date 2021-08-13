@@ -25,4 +25,9 @@ public class AppUserController {
     public Optional<AppUser> findById(@PathVariable(value = "id") Long id) {
         return appUserService.findAppUserById(id);
     }
+
+    @GetMapping("/email/{email}")
+    public AppUser findByEmail(@PathVariable(value = "email") String email) {
+        return appUserService.findByEmail(email);
+    }
 }

@@ -30,4 +30,9 @@ public class ManagerController {
     public List<Manager> findByName(@PathVariable(value = "name") String name) {
         return managerService.findManagersByName(name);
     }
+
+    @GetMapping("/email/{email}")
+    public Optional<Manager> findByEmail(@PathVariable(value = "email") String email) {
+        return managerService.findManagerByEmail(email);
+    }
 }

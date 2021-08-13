@@ -44,6 +44,17 @@ public class StaffServiceImpl implements StaffService {
     }
 
     @Override
+    public Optional<Staff> findStaffByEmail(String email) {
+        Optional<Staff> staff = staffRepository.findByUserDetailsEmail(email);
+
+        if (staff.isEmpty()) {
+            throw new StaffDoesNotExistException("Staff not found with that email");
+        }
+
+        return staff;
+    }
+
+    @Override
     public Staff createStaff(Staff staff) {
         // check manager id is manager
         Optional<AppUser> manager = appUserRepository.findById(staff.getManagerDetails().getId());
