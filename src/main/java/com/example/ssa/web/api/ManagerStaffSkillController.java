@@ -1,6 +1,7 @@
 package com.example.ssa.web.api;
 
 import com.example.ssa.entity.skill.ManagerStaffSkill;
+import com.example.ssa.exceptions.requests.bad.ManagerStaffSkillDoesNotExistException;
 import com.example.ssa.repository.ManagerStaffSkillRepository;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,6 +24,12 @@ public class ManagerStaffSkillController {
 
     @GetMapping("/{id}")
     public Optional<ManagerStaffSkill> findById(@PathVariable("id") long id) {
-        return skillRepository.findById(id);
+        Optional<ManagerStaffSkill> managerStaffSkill =  skillRepository.findById(id);
+
+        if (managerStaffSkill.isEmpty()) {
+            throw new ManagerStaffSkillDoesNotExistException("Skill not found with that id");
+        }
+
+        return managerStaffSkill;
     }
 }
