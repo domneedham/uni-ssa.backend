@@ -3,6 +3,7 @@ CREATE TABLE app_user (
     firstname   CHAR (20) NOT NULL,
     surname     CHAR (20) NOT NULL,
     email       CHAR (50) NOT NULL,
+    PASSWORD    CHAR (255) NOT NULL,
     user_role   CHAR (20) NOT NULL
 );
 

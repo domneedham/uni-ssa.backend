@@ -47,8 +47,8 @@ public class StaffSkillControllerTest {
     Skill skillOne = new Skill(1L, "Skill One", categoryOne);
     Skill skillTwo = new Skill(2L, "Skill Two", categoryTwo);
 
-    AppUser appUserOne = new AppUser(1L, "Test", "User", "test@user.com", UserRole.STAFF, "Test User");
-    AppUser appUserTwo = new AppUser(2L, "Test", "Staff", "test@staff.com", UserRole.STAFF, "Test Staff");
+    AppUser appUserOne = new AppUser(1L, "Test", "User", "test@user.com", "password", UserRole.STAFF, "Test User");
+    AppUser appUserTwo = new AppUser(2L, "Test", "Staff", "test@staff.com", "password", UserRole.STAFF, "Test Staff");
 
     StaffSkill staffSkillOne = new StaffSkill(1L, skillOne, appUserOne, 5, LocalDateTime.now(), LocalDateTime.now().plusDays(30));
     StaffSkill staffSkillTwo = new StaffSkill(1L, skillTwo, appUserTwo, 3, LocalDateTime.now(), null);

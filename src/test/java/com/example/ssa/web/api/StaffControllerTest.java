@@ -44,9 +44,9 @@ public class StaffControllerTest {
     @MockBean
     AppUserRepository appUserRepository;
 
-    AppUser appUserManager = new AppUser(3L, "Test", "User", "test@user.com", UserRole.MANAGER, "Test User");
-    AppUser appUserStaffOne = new AppUser(1L, "Test", "User", "test@user.com", UserRole.STAFF, "Test User");
-    AppUser appUserStaffTwo = new AppUser(2L, "Test", "Staff", "test@staff.com", UserRole.STAFF, "Test Staff");
+    AppUser appUserManager = new AppUser(3L, "Test", "User", "test@user.com", "password", UserRole.MANAGER, "Test User");
+    AppUser appUserStaffOne = new AppUser(1L, "Test", "User", "test@user.com","password", UserRole.STAFF, "Test User");
+    AppUser appUserStaffTwo = new AppUser(2L, "Test", "Staff", "test@staff.com", "password", UserRole.STAFF, "Test Staff");
 
     Category categoryOne = new Category(1L, "Category One", 57718);
     Category categoryTwo = new Category(2L, "Category Two", 57718);

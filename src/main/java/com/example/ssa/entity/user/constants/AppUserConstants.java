@@ -6,5 +6,6 @@ public class AppUserConstants {
     public static final String FIRSTNAME = "firstname";
     public static final String SURNAME = "surname";
     public static final String EMAIL = "email";
+    public static final String PASSWORD = "password";
     public static final String USER_ROLE = "user_role";
 }

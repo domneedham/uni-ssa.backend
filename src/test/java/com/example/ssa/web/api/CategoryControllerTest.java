@@ -50,7 +50,7 @@ public class CategoryControllerTest {
 
     Skill skillOne = new Skill(1L, "Skill One", categoryOne);
 
-    AppUser appUserOne = new AppUser(1L, "Test", "User", "test@user.com", UserRole.STAFF, "Test User");
+    AppUser appUserOne = new AppUser(1L, "Test", "User", "test@user.com","password", UserRole.STAFF, "Test User");
 
     StaffSkill staffSkillOne = new StaffSkill(1L, skillOne, appUserOne, 5, LocalDateTime.now(), LocalDateTime.now().plusDays(30));
 

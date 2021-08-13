@@ -37,8 +37,8 @@ public class ManagerStaffSkillControllerTest {
     @MockBean
     ManagerStaffSkillRepository managerStaffSkillRepository;
 
-    AppUser appUserOne = new AppUser(1L, "Test", "User", "test@user.com", UserRole.STAFF, "Test User");
-    AppUser appUserTwo = new AppUser(2L, "Test", "Two", "test@two.com", UserRole.STAFF, "Test Two");
+    AppUser appUserOne = new AppUser(1L, "Test", "User", "test@user.com", "password", UserRole.STAFF, "Test User");
+    AppUser appUserTwo = new AppUser(2L, "Test", "Two", "test@two.com", "password", UserRole.STAFF, "Test Two");
 
     Category category = new Category(1L, "Category One", 26530);
     Skill skillOne = new Skill(1L, "Skill One", category);

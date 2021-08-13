@@ -1,9 +1,7 @@
 package com.example.ssa.web.api;
 
 import com.example.ssa.entity.skill.Skill;
-import com.example.ssa.exceptions.requests.bad.SkillDoesNotExistException;
-import com.example.ssa.repository.SkillRepository;
-import com.example.ssa.repository.StaffSkillRepository;
+import com.example.ssa.service.SkillService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
@@ -13,62 +11,41 @@ import java.util.Optional;
 @RequestMapping("/api/skill")
 @RestController
 public class SkillController {
-    private final SkillRepository skillRepository;
-    private final StaffSkillRepository staffSkillRepository;
+    private final SkillService skillService;
 
-    public SkillController(SkillRepository skillRepository, StaffSkillRepository staffSkillRepository) {
-        this.skillRepository = skillRepository;
-        this.staffSkillRepository = staffSkillRepository;
+    public SkillController(SkillService skillService) {
+        this.skillService = skillService;
     }
 
     @GetMapping("/")
     public List<Skill> findAll() {
-        return skillRepository.findAll();
+        return skillService.findAllSkills();
     }
 
     @GetMapping("/{id}")
     public Optional<Skill> findById(@PathVariable("id") long id) throws RuntimeException {
-        Optional<Skill> skill = skillRepository.findById(id);
-
-        if (skill.isEmpty()) {
-            throw new SkillDoesNotExistException("Skill not found with that id");
-        }
-
-        return skill;
+        return skillService.findSkillById(id);
     }
 
     @GetMapping("/search/{name}")
     public List<Skill> searchByName(@PathVariable("name") String name) {
-        return skillRepository.findAllByNameContainingIgnoreCase(name);
+        return skillService.findSkillsByName(name);
     }
 
     @PostMapping("/create")
     public Skill create(@RequestBody Skill skill) {
-        return skillRepository.save(skill);
+        return skillService.createSkill(skill);
     }
 
     @PutMapping("/update")
     public Skill update(@RequestBody Skill skill) throws Exception {
-        Optional<Skill> skillToUpdate = skillRepository.findById(skill.getId());
-
-        if (skillToUpdate.isEmpty()) {
-            throw new SkillDoesNotExistException("Skill not found with that id");
-        }
-
-        return skillRepository.save(skill);
+        return skillService.updateSkill(skill);
     }
 
     @DeleteMapping("/delete/{id}")
     @Transactional
     public void delete(@PathVariable("id") Long id) {
-        Optional<Skill> skillToDelete = skillRepository.findById(id);
-
-        if (skillToDelete.isEmpty()) {
-            throw new SkillDoesNotExistException("Skill not found with that id");
-        }
-
-        staffSkillRepository.deleteAllBySkillId(id);
-        skillRepository.deleteById(id);
+        skillService.deleteSkillById(id);
     }
 }
 

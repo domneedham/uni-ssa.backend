@@ -35,10 +35,10 @@ public class ManagerControllerTest {
     @MockBean
     ManagerRepository managerRepository;
 
-    AppUser appUserManagerOne = new AppUser(3L, "Test", "User", "test@user.com", UserRole.MANAGER, "Test User");
-    AppUser appUserManagerTwo = new AppUser(3L, "Test", "Manager", "test@manager.com", UserRole.MANAGER, "Test Manager");
-    AppUser appUserStaffOne = new AppUser(1L, "Test", "User", "test@user.com", UserRole.STAFF, "Test User");
-    AppUser appUserStaffTwo = new AppUser(2L, "Test", "Manager", "test@manager.com", UserRole.STAFF, "Test Manager");
+    AppUser appUserManagerOne = new AppUser(3L, "Test", "User", "test@user.com", "password",UserRole.MANAGER, "Test User");
+    AppUser appUserManagerTwo = new AppUser(3L, "Test", "Manager", "test@manager.com","password", UserRole.MANAGER, "Test Manager");
+    AppUser appUserStaffOne = new AppUser(1L, "Test", "User", "test@user.com", "password",UserRole.STAFF, "Test User");
+    AppUser appUserStaffTwo = new AppUser(2L, "Test", "Manager", "test@manager.com", "password",UserRole.STAFF, "Test Manager");
 
     List<AppUser> staffListOne = new ArrayList<>(List.of(appUserStaffOne));
     List<AppUser> staffListTwo = new ArrayList<>(List.of(appUserStaffTwo));

@@ -31,6 +31,9 @@ public class AppUser {
     @Column(name = AppUserConstants.EMAIL)
     private String email;
 
+    @Column(name = AppUserConstants.PASSWORD)
+    private String password;
+
     @Column(name = AppUserConstants.USER_ROLE)
     @Enumerated(EnumType.STRING)
     private UserRole userRole;
