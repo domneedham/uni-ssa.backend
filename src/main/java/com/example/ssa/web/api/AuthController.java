@@ -35,6 +35,8 @@ public class AuthController {
 
         if (authorisationHeader != null && authorisationHeader.startsWith("Bearer ")) {
             try {
+                log.info("Refreshing token");
+
                 String token = authorisationHeader.substring("Bearer ".length());
                 Algorithm algorithm = Algorithm.HMAC256("secret".getBytes());
                 JWTVerifier verifier = JWT.require(algorithm).build();
@@ -44,7 +46,7 @@ public class AuthController {
 
                 String accessToken = JWT.create()
                         .withSubject(user.getEmail())
-                        .withExpiresAt(new Date(System.currentTimeMillis() + 10 * 60 * 1000))
+                        .withExpiresAt(new Date(System.currentTimeMillis() + 15 * 60 * 1000))
                         .withIssuer(request.getRequestURL().toString())
                         .withClaim("roles", List.of(user.getUserRole().toString()))
                         .sign(algorithm);
@@ -57,7 +59,6 @@ public class AuthController {
                 new ObjectMapper().writeValue(response.getOutputStream(), tokens);
             } catch (Exception e) {
                 log.error("Error logging in: {}", e.getMessage());
-                response.setHeader("error", e.getMessage());
                 response.setStatus(HttpServletResponse.SC_FORBIDDEN);
                 Map<String, String> error = new HashMap<>();
                 error.put("error", e.getMessage());
