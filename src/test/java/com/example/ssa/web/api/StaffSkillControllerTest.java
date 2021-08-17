@@ -14,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -39,6 +41,8 @@ public class StaffSkillControllerTest {
     ObjectMapper mapper;
 
     @MockBean
+    UserDetailsService userDetailsService;
+    @MockBean
     StaffSkillService staffSkillService;
 
     Category categoryOne = new Category(1L, "Category One", 57718);
@@ -53,6 +57,7 @@ public class StaffSkillControllerTest {
     StaffSkill staffSkillOne = new StaffSkill(1L, skillOne, appUserOne, 5, LocalDateTime.now(), LocalDateTime.now().plusDays(30));
     StaffSkill staffSkillTwo = new StaffSkill(1L, skillTwo, appUserTwo, 3, LocalDateTime.now(), null);
 
+    @WithMockUser(roles = "MANAGER")
     @Test
     public void findAllStaffSkills_success() throws Exception {
         List<StaffSkill> records = new ArrayList<>(List.of(staffSkillOne, staffSkillTwo));
@@ -68,6 +73,7 @@ public class StaffSkillControllerTest {
                 .andExpect(jsonPath("$[0].staffDetails.firstname", is("Test")));
     }
 
+    @WithMockUser(roles = "MANAGER")
     @Test
     public void findAllStaffSkills_empty() throws Exception {
         List<StaffSkill> records = new ArrayList<>(List.of());
@@ -81,6 +87,7 @@ public class StaffSkillControllerTest {
                 .andExpect(jsonPath("$", hasSize(0)));
     }
 
+    @WithMockUser(roles = "MANAGER")
     @Test
     public void findById_success() throws Exception {
         when(staffSkillService.findStaffSkillById(1L)).thenReturn(java.util.Optional.ofNullable(staffSkillOne));
@@ -94,6 +101,7 @@ public class StaffSkillControllerTest {
                 .andExpect(jsonPath("$.staffDetails.firstname", is("Test")));
     }
 
+    @WithMockUser(roles = "MANAGER")
     @Test
     public void findById_notFound() throws Exception {
         when(staffSkillService.findStaffSkillById(1L)).thenThrow(new StaffSkillDoesNotExistException("Staff skill not found with that id"));
@@ -108,6 +116,7 @@ public class StaffSkillControllerTest {
                 );
     }
 
+    @WithMockUser(roles = "MANAGER")
     @Test
     public void findBySkillIdAndStaffId_success() throws Exception {
         when(staffSkillService.findStaffSkillBySkillIdAndStaffId(1L, 1L)).thenReturn(java.util.Optional.ofNullable(staffSkillOne));
@@ -121,6 +130,7 @@ public class StaffSkillControllerTest {
                 .andExpect(jsonPath("$.staffDetails.firstname", is("Test")));
     }
 
+    @WithMockUser(roles = "MANAGER")
     @Test
     public void findBySkillIdAndStaffId_notFound() throws Exception {
         when(staffSkillService.findStaffSkillBySkillIdAndStaffId(1L, 1L)).thenThrow(new StaffSkillDoesNotExistException("Staff skill not found with that id"));
@@ -135,6 +145,7 @@ public class StaffSkillControllerTest {
                 );
     }
 
+    @WithMockUser(roles = "MANAGER")
     @Test
     public void findAllStaffSkillsByStaffId_success() throws Exception {
         List<StaffSkill> records = new ArrayList<>(List.of(staffSkillOne));
@@ -150,6 +161,7 @@ public class StaffSkillControllerTest {
                 .andExpect(jsonPath("$[0].staffDetails.firstname", is("Test")));
     }
 
+    @WithMockUser(roles = "MANAGER")
     @Test
     public void assignStaffSkill_success() throws Exception {
         StaffSkill skill = StaffSkill.builder()
@@ -174,6 +186,7 @@ public class StaffSkillControllerTest {
                 .andExpect(jsonPath("$.staffDetails.firstname", is("Test")));
     }
 
+    @WithMockUser(roles = "MANAGER")
     @Test
     public void updateStaffSkill_success() throws Exception {
         StaffSkill skill = StaffSkill.builder()

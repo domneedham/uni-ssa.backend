@@ -6,9 +6,6 @@ import com.example.ssa.entity.skill.StaffSkill;
 import com.example.ssa.entity.user.AppUser;
 import com.example.ssa.entity.user.UserRole;
 import com.example.ssa.exceptions.requests.bad.CategoryDoesNotExistException;
-import com.example.ssa.repository.CategoryRepository;
-import com.example.ssa.repository.SkillRepository;
-import com.example.ssa.repository.StaffSkillRepository;
 import com.example.ssa.service.CategoryService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -16,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -40,6 +39,8 @@ public class CategoryControllerTest {
     ObjectMapper mapper;
 
     @MockBean
+    UserDetailsService userDetailsService;
+    @MockBean
     CategoryService categoryService;
 
     Category categoryOne = new Category(1L, "Test Category One", 26932);
@@ -51,6 +52,7 @@ public class CategoryControllerTest {
 
     StaffSkill staffSkillOne = new StaffSkill(1L, skillOne, appUserOne, 5, LocalDateTime.now(), LocalDateTime.now().plusDays(30));
 
+    @WithMockUser(roles = "MANAGER")
     @Test
     public void findAllCategories_success() throws Exception {
         List<Category> records = new ArrayList<>(List.of(categoryOne, categoryTwo));
@@ -65,6 +67,7 @@ public class CategoryControllerTest {
                 .andExpect(jsonPath("$[0].name", is(categoryOne.getName())));
     }
 
+    @WithMockUser(roles = "MANAGER")
     @Test
     public void findAllCategories_empty() throws Exception {
         List<Category> records = new ArrayList<>(List.of());
@@ -78,6 +81,7 @@ public class CategoryControllerTest {
                 .andExpect(jsonPath("$", hasSize(0)));
     }
 
+    @WithMockUser(roles = "MANAGER")
     @Test
     public void findById_success() throws Exception {
         when(categoryService.findCategoryById(1L)).thenReturn(java.util.Optional.ofNullable(categoryOne));
@@ -90,6 +94,7 @@ public class CategoryControllerTest {
                 .andExpect(jsonPath("$.name", is(categoryOne.getName())));
     }
 
+    @WithMockUser(roles = "MANAGER")
     @Test
     public void findById_notFound() throws Exception {
         when(categoryService.findCategoryById(1L)).thenThrow(new CategoryDoesNotExistException("Category not found with that id"));
@@ -104,6 +109,7 @@ public class CategoryControllerTest {
                 );
     }
 
+    @WithMockUser(roles = "MANAGER")
     @Test
     public void createCategory_success() throws Exception {
         Category category = Category.builder()
@@ -123,6 +129,7 @@ public class CategoryControllerTest {
                 .andExpect(jsonPath("$.name", is(categoryOne.getName())));
     }
 
+    @WithMockUser(roles = "MANAGER")
     @Test
     public void updateCategory_success() throws Exception {
         Category category = Category.builder()
@@ -144,6 +151,7 @@ public class CategoryControllerTest {
                 .andExpect(jsonPath("$.name", is(categoryOne.getName())));
     }
 
+    @WithMockUser(roles = "MANAGER")
     @Test
     public void updateCategory_nullId() throws Exception {
         Category category = Category.builder()
@@ -166,6 +174,7 @@ public class CategoryControllerTest {
                 );
     }
 
+    @WithMockUser(roles = "MANAGER")
     @Test
     public void deleteCategory_success() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders
@@ -174,6 +183,7 @@ public class CategoryControllerTest {
                 .andExpect(status().isOk());
     }
 
+    @WithMockUser(roles = "MANAGER")
     @Test
     public void deleteCategory_notFound() throws Exception {
         doThrow(new CategoryDoesNotExistException("Category not found with that id")).when(categoryService).deleteCategoryById(1L);

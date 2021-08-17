@@ -6,7 +6,6 @@ import com.example.ssa.entity.skill.Skill;
 import com.example.ssa.entity.user.AppUser;
 import com.example.ssa.entity.user.UserRole;
 import com.example.ssa.exceptions.requests.bad.ManagerStaffSkillDoesNotExistException;
-import com.example.ssa.repository.ManagerStaffSkillRepository;
 import com.example.ssa.service.ManagerStaffSkillService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -14,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
@@ -36,6 +37,8 @@ public class ManagerStaffSkillControllerTest {
     ObjectMapper mapper;
 
     @MockBean
+    UserDetailsService userDetailsService;
+    @MockBean
     ManagerStaffSkillService managerStaffSkillService;
 
     AppUser appUserOne = new AppUser(1L, "Test", "User", "test@user.com", "password", UserRole.STAFF, "Test User");
@@ -48,6 +51,7 @@ public class ManagerStaffSkillControllerTest {
     ManagerStaffSkill managerStaffSkillOne = new ManagerStaffSkill(1L, skillOne, List.of(appUserOne));
     ManagerStaffSkill managerStaffSkillTwo = new ManagerStaffSkill(2L, skillTwo, List.of(appUserOne, appUserTwo));
 
+    @WithMockUser(roles = "MANAGER")
     @Test
     public void findAllManagerStaffSkills_success() throws Exception {
         List<ManagerStaffSkill> records = new ArrayList<>(List.of(managerStaffSkillOne, managerStaffSkillTwo));
@@ -62,6 +66,8 @@ public class ManagerStaffSkillControllerTest {
                 .andExpect(jsonPath("$[0].skill.name", is(skillOne.getName())));
     }
 
+
+    @WithMockUser(roles = "MANAGER")
     @Test
     public void findAllManagerStaffSkills_empty() throws Exception {
         List<ManagerStaffSkill> records = new ArrayList<>(List.of());
@@ -75,6 +81,7 @@ public class ManagerStaffSkillControllerTest {
                 .andExpect(jsonPath("$", hasSize(0)));
     }
 
+    @WithMockUser(roles = "MANAGER")
     @Test
     public void findById_success() throws Exception {
         when(managerStaffSkillService.findManagerStaffSkillById(1L)).thenReturn(java.util.Optional.ofNullable(managerStaffSkillOne));
@@ -87,6 +94,7 @@ public class ManagerStaffSkillControllerTest {
                 .andExpect(jsonPath("$.skill.name", is(skillOne.getName())));
     }
 
+    @WithMockUser(roles = "MANAGER")
     @Test
     public void findById_notFound() throws Exception {
         when(managerStaffSkillService.findManagerStaffSkillById(1L)).thenThrow(new ManagerStaffSkillDoesNotExistException("Skill not found with that id"));

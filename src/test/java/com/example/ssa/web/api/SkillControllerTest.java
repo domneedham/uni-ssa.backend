@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -34,6 +36,8 @@ public class SkillControllerTest {
     ObjectMapper mapper;
 
     @MockBean
+    UserDetailsService userDetailsService;
+    @MockBean
     SkillService skillService;
 
     Category categoryOne = new Category(1L, "Category One", 57718);
@@ -42,6 +46,7 @@ public class SkillControllerTest {
     Skill skillOne = new Skill(1L, "Skill One", categoryOne);
     Skill skillTwo = new Skill(1L, "Skill Two", categoryTwo);
 
+    @WithMockUser(roles = "MANAGER")
     @Test
     public void findAllSkills_success() throws Exception {
         List<Skill> records = new ArrayList<>(Arrays.asList(skillOne, skillTwo));
@@ -56,6 +61,7 @@ public class SkillControllerTest {
                 .andExpect(jsonPath("$[0].name", is("Skill One")));
     }
 
+    @WithMockUser(roles = "MANAGER")
     @Test
     public void findAllSkills_empty() throws Exception {
         List<Skill> records = new ArrayList<>(Arrays.asList());
@@ -69,6 +75,7 @@ public class SkillControllerTest {
                 .andExpect(jsonPath("$", hasSize(0)));
     }
 
+    @WithMockUser(roles = "MANAGER")
     @Test
     public void findById_success() throws Exception {
         when(skillService.findSkillById(1L)).thenReturn(java.util.Optional.ofNullable(skillOne));
@@ -81,6 +88,7 @@ public class SkillControllerTest {
                 .andExpect(jsonPath("$.name", is("Skill One")));
     }
 
+    @WithMockUser(roles = "MANAGER")
     @Test
     public void findById_notFound() throws Exception {
         when(skillService.findSkillById(1L)).thenThrow(new SkillDoesNotExistException("Skill not found with that id"));
@@ -95,6 +103,7 @@ public class SkillControllerTest {
                         );
     }
 
+    @WithMockUser(roles = "MANAGER")
     @Test
     public void createSkill_success() throws Exception {
         Skill skill = Skill.builder()
@@ -115,6 +124,7 @@ public class SkillControllerTest {
                 .andExpect(jsonPath("$.name", is("Skill One")));
     }
 
+    @WithMockUser(roles = "MANAGER")
     @Test
     public void updateSkill_success() throws Exception {
         Skill skill = Skill.builder()
@@ -136,6 +146,7 @@ public class SkillControllerTest {
                 .andExpect(jsonPath("$.name", is("Skill One")));
     }
 
+    @WithMockUser(roles = "MANAGER")
     @Test
     public void updateSkill_nullId() throws Exception {
         Skill skill = Skill.builder()
@@ -158,6 +169,7 @@ public class SkillControllerTest {
                 );
     }
 
+    @WithMockUser(roles = "MANAGER")
     @Test
     public void deleteSkill_success() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders
@@ -166,6 +178,7 @@ public class SkillControllerTest {
                 .andExpect(status().isOk());
     }
 
+    @WithMockUser(roles = "MANAGER")
     @Test
     public void deleteSkill_notFound() throws Exception {
         doThrow(new SkillDoesNotExistException("Skill not found with that id")).when(skillService).deleteSkillById(1L);
