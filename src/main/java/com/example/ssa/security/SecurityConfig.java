@@ -19,6 +19,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+    private final String staffRole = UserRole.STAFF.name();
+    private final String managerRole = UserRole.MANAGER.name();
+
     private final UserDetailsService userDetailsService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
@@ -40,10 +43,31 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
+        // AuthController
         http.authorizeRequests().antMatchers("/api/auth/**").permitAll();
-        http.authorizeRequests().antMatchers(HttpMethod.GET, "/api/user/**").hasAnyAuthority(UserRole.STAFF.toString());
-        http.authorizeRequests().antMatchers(HttpMethod.POST, "/api/user/**").hasAnyAuthority(UserRole.MANAGER.toString());
-        http.authorizeRequests().anyRequest().authenticated();
+
+        // AppUserController
+        http.authorizeRequests().antMatchers("/api/user/**").hasAnyAuthority(staffRole, managerRole);
+        // ManagerController - only allow staff to get specific manager with id
+        http.authorizeRequests().antMatchers(HttpMethod.GET, "/api/manager/{id}").hasAnyAuthority(staffRole, managerRole);
+        http.authorizeRequests().antMatchers("/api/manager/**").hasAuthority(managerRole);
+        // StaffController
+        http.authorizeRequests().antMatchers("/api/staff/create").hasAuthority(managerRole);
+        http.authorizeRequests().antMatchers("/api/staff/**").hasAnyAuthority(staffRole, managerRole);
+
+        // CategoryController
+        http.authorizeRequests().antMatchers(HttpMethod.GET, "/api/category/**").hasAnyAuthority(staffRole, managerRole);
+        http.authorizeRequests().antMatchers("/api/category/**").hasAuthority(managerRole);
+
+        // ManagerStaffSkillController
+        http.authorizeRequests().antMatchers("/api/skill/manager/**").hasAuthority(managerRole);
+        // StaffSkill Controller
+        http.authorizeRequests().antMatchers("/api/skill/staff/**").hasAnyAuthority(staffRole, managerRole);
+        // SkillController
+        http.authorizeRequests().antMatchers(HttpMethod.GET, "/api/skill/**").hasAnyAuthority(staffRole, managerRole);
+        http.authorizeRequests().antMatchers("/api/skill/**").hasAnyAuthority(managerRole);
+
+        http.authorizeRequests().anyRequest().denyAll();
 
         http.addFilter(customAuthenticationFilter);
         http.addFilterBefore(new CustomAuthorisationFilter(), UsernamePasswordAuthenticationFilter.class);

@@ -50,9 +50,9 @@ public class ManagerControllerTest {
     Manager managerOne = new Manager(3L, appUserManagerOne, staffListOne);
     Manager managerTwo = new Manager(3L, appUserManagerTwo, staffListTwo);
 
-    @WithMockUser(roles = "MANAGER")
+    @WithMockUser(authorities = "MANAGER")
     @Test
-    public void findAllManagers_success() throws Exception {
+    public void findAllManagers_success_manager() throws Exception {
         List<Manager> records = new ArrayList<>(List.of(managerOne, managerTwo));
 
         when(managerService.findAllManagers()).thenReturn(records);
@@ -66,9 +66,22 @@ public class ManagerControllerTest {
                 .andExpect(jsonPath("$[1].userDetails.surname", is(managerTwo.getUserDetails().getSurname())));
     }
 
-    @WithMockUser(roles = "MANAGER")
+    @WithMockUser(authorities = "STAFF")
     @Test
-    public void findById_success() throws Exception {
+    public void findAllManagers_forbidden_staff() throws Exception {
+        List<Manager> records = new ArrayList<>(List.of(managerOne, managerTwo));
+
+        when(managerService.findAllManagers()).thenReturn(records);
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get("/api/manager/")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden());
+    }
+
+    @WithMockUser(authorities = "MANAGER")
+    @Test
+    public void findById_success_manager() throws Exception {
         when(managerService.findManagerById(1L)).thenReturn(java.util.Optional.ofNullable(managerOne));
 
         mockMvc.perform(MockMvcRequestBuilders
@@ -79,7 +92,20 @@ public class ManagerControllerTest {
                 .andExpect(jsonPath("$.userDetails.surname", is(managerOne.getUserDetails().getSurname())));
     }
 
-    @WithMockUser(roles = "MANAGER")
+    @WithMockUser(authorities = "STAFF")
+    @Test
+    public void findById_success_staff() throws Exception {
+        when(managerService.findManagerById(1L)).thenReturn(java.util.Optional.ofNullable(managerOne));
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get("/api/manager/1")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", notNullValue()))
+                .andExpect(jsonPath("$.userDetails.surname", is(managerOne.getUserDetails().getSurname())));
+    }
+
+    @WithMockUser(authorities = "MANAGER")
     @Test
     public void findById_notFound() throws Exception {
         when(managerService.findManagerById(1L)).thenThrow(new ManagerDoesNotExistException("Manager not found with that id"));
@@ -94,9 +120,9 @@ public class ManagerControllerTest {
                 );
     }
 
-    @WithMockUser(roles = "MANAGER")
+    @WithMockUser(authorities = "MANAGER")
     @Test
-    public void findByName_success() throws Exception {
+    public void findByName_success_manager() throws Exception {
         List<Manager> records = new ArrayList<>(List.of(managerOne, managerTwo));
         when(managerService.findManagersByName("test")).thenReturn(records);
 
@@ -109,7 +135,19 @@ public class ManagerControllerTest {
                 .andExpect(jsonPath("$[1].userDetails.surname", is(managerTwo.getUserDetails().getSurname())));
     }
 
-    @WithMockUser(roles = "MANAGER")
+    @WithMockUser(authorities = "STAFF")
+    @Test
+    public void findByName_forbidden_staff() throws Exception {
+        List<Manager> records = new ArrayList<>(List.of(managerOne, managerTwo));
+        when(managerService.findManagersByName("test")).thenReturn(records);
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get("/api/manager/search/test")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden());
+    }
+
+    @WithMockUser(authorities = "MANAGER")
     @Test
     public void findByName_noMatch() throws Exception {
         List<Manager> records = new ArrayList<>(List.of());

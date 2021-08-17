@@ -19,8 +19,10 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.*;
 
+import static com.example.ssa.constants.HttpMapping.AUTH_MAPPING;
+
 @Slf4j
-@RequestMapping("/api/auth")
+@RequestMapping(AUTH_MAPPING)
 @RestController
 public class AuthController {
     private final AppUserService appUserService;

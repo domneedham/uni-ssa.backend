@@ -7,7 +7,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
-@RequestMapping("api/staff")
+import static com.example.ssa.constants.HttpMapping.STAFF_MAPPING;
+
+@RequestMapping(STAFF_MAPPING)
 @RestController
 public class StaffController {
     private final StaffService staffService;

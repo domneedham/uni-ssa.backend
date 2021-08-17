@@ -51,9 +51,9 @@ public class ManagerStaffSkillControllerTest {
     ManagerStaffSkill managerStaffSkillOne = new ManagerStaffSkill(1L, skillOne, List.of(appUserOne));
     ManagerStaffSkill managerStaffSkillTwo = new ManagerStaffSkill(2L, skillTwo, List.of(appUserOne, appUserTwo));
 
-    @WithMockUser(roles = "MANAGER")
+    @WithMockUser(authorities = "MANAGER")
     @Test
-    public void findAllManagerStaffSkills_success() throws Exception {
+    public void findAllManagerStaffSkills_success_manager() throws Exception {
         List<ManagerStaffSkill> records = new ArrayList<>(List.of(managerStaffSkillOne, managerStaffSkillTwo));
 
         when(managerStaffSkillService.findAllManagerStaffSkills()).thenReturn(records);
@@ -66,8 +66,21 @@ public class ManagerStaffSkillControllerTest {
                 .andExpect(jsonPath("$[0].skill.name", is(skillOne.getName())));
     }
 
+    @WithMockUser(authorities = "STAFF")
+    @Test
+    public void findAllManagerStaffSkills_forbidden_staff() throws Exception {
+        List<ManagerStaffSkill> records = new ArrayList<>(List.of(managerStaffSkillOne, managerStaffSkillTwo));
 
-    @WithMockUser(roles = "MANAGER")
+        when(managerStaffSkillService.findAllManagerStaffSkills()).thenReturn(records);
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get("/api/skill/manager/")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden());
+    }
+
+
+    @WithMockUser(authorities = "MANAGER")
     @Test
     public void findAllManagerStaffSkills_empty() throws Exception {
         List<ManagerStaffSkill> records = new ArrayList<>(List.of());
@@ -81,9 +94,9 @@ public class ManagerStaffSkillControllerTest {
                 .andExpect(jsonPath("$", hasSize(0)));
     }
 
-    @WithMockUser(roles = "MANAGER")
+    @WithMockUser(authorities = "MANAGER")
     @Test
-    public void findById_success() throws Exception {
+    public void findById_success_manager() throws Exception {
         when(managerStaffSkillService.findManagerStaffSkillById(1L)).thenReturn(java.util.Optional.ofNullable(managerStaffSkillOne));
 
         mockMvc.perform(MockMvcRequestBuilders
@@ -94,7 +107,18 @@ public class ManagerStaffSkillControllerTest {
                 .andExpect(jsonPath("$.skill.name", is(skillOne.getName())));
     }
 
-    @WithMockUser(roles = "MANAGER")
+    @WithMockUser(authorities = "STAFF")
+    @Test
+    public void findById_forbidden_staff() throws Exception {
+        when(managerStaffSkillService.findManagerStaffSkillById(1L)).thenReturn(java.util.Optional.ofNullable(managerStaffSkillOne));
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get("/api/skill/manager/1")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden());
+    }
+
+    @WithMockUser(authorities = "MANAGER")
     @Test
     public void findById_notFound() throws Exception {
         when(managerStaffSkillService.findManagerStaffSkillById(1L)).thenThrow(new ManagerStaffSkillDoesNotExistException("Skill not found with that id"));

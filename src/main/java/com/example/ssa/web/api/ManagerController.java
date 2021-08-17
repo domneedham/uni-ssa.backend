@@ -7,7 +7,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
-@RequestMapping("/api/manager")
+import static com.example.ssa.constants.HttpMapping.MANAGER_MAPPING;
+
+@RequestMapping(MANAGER_MAPPING)
 @RestController
 public class ManagerController {
     private final ManagerService managerService;
