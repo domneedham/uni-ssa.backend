@@ -8,7 +8,9 @@ import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
-@RequestMapping("/api/category")
+import static com.example.ssa.constants.HttpMapping.CATEGORY_MAPPING;
+
+@RequestMapping(CATEGORY_MAPPING)
 @RestController
 public class CategoryController {
     private final CategoryService categoryService;

@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -34,6 +36,8 @@ public class SkillControllerTest {
     ObjectMapper mapper;
 
     @MockBean
+    UserDetailsService userDetailsService;
+    @MockBean
     SkillService skillService;
 
     Category categoryOne = new Category(1L, "Category One", 57718);
@@ -42,8 +46,9 @@ public class SkillControllerTest {
     Skill skillOne = new Skill(1L, "Skill One", categoryOne);
     Skill skillTwo = new Skill(1L, "Skill Two", categoryTwo);
 
+    @WithMockUser(authorities = "MANAGER")
     @Test
-    public void findAllSkills_success() throws Exception {
+    public void findAllSkills_success_manager() throws Exception {
         List<Skill> records = new ArrayList<>(Arrays.asList(skillOne, skillTwo));
 
         when(skillService.findAllSkills()).thenReturn(records);
@@ -56,6 +61,22 @@ public class SkillControllerTest {
                 .andExpect(jsonPath("$[0].name", is("Skill One")));
     }
 
+    @WithMockUser(authorities = "STAFF")
+    @Test
+    public void findAllSkills_success_staff() throws Exception {
+        List<Skill> records = new ArrayList<>(Arrays.asList(skillOne, skillTwo));
+
+        when(skillService.findAllSkills()).thenReturn(records);
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get("/api/skill/")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(2)))
+                .andExpect(jsonPath("$[0].name", is("Skill One")));
+    }
+
+    @WithMockUser(authorities = "MANAGER")
     @Test
     public void findAllSkills_empty() throws Exception {
         List<Skill> records = new ArrayList<>(Arrays.asList());
@@ -69,8 +90,9 @@ public class SkillControllerTest {
                 .andExpect(jsonPath("$", hasSize(0)));
     }
 
+    @WithMockUser(authorities = "MANAGER")
     @Test
-    public void findById_success() throws Exception {
+    public void findById_success_manager() throws Exception {
         when(skillService.findSkillById(1L)).thenReturn(java.util.Optional.ofNullable(skillOne));
 
         mockMvc.perform(MockMvcRequestBuilders
@@ -81,6 +103,20 @@ public class SkillControllerTest {
                 .andExpect(jsonPath("$.name", is("Skill One")));
     }
 
+    @WithMockUser(authorities = "STAFF")
+    @Test
+    public void findById_success_staff() throws Exception {
+        when(skillService.findSkillById(1L)).thenReturn(java.util.Optional.ofNullable(skillOne));
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get("/api/skill/1")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", notNullValue()))
+                .andExpect(jsonPath("$.name", is("Skill One")));
+    }
+
+    @WithMockUser(authorities = "MANAGER")
     @Test
     public void findById_notFound() throws Exception {
         when(skillService.findSkillById(1L)).thenThrow(new SkillDoesNotExistException("Skill not found with that id"));
@@ -95,8 +131,9 @@ public class SkillControllerTest {
                         );
     }
 
+    @WithMockUser(authorities = "MANAGER")
     @Test
-    public void createSkill_success() throws Exception {
+    public void createSkill_success_manager() throws Exception {
         Skill skill = Skill.builder()
                 .name("Skill One")
                 .category(categoryOne)
@@ -115,8 +152,28 @@ public class SkillControllerTest {
                 .andExpect(jsonPath("$.name", is("Skill One")));
     }
 
+    @WithMockUser(authorities = "STAFF")
     @Test
-    public void updateSkill_success() throws Exception {
+    public void createSkill_forbidden_staff() throws Exception {
+        Skill skill = Skill.builder()
+                .name("Skill One")
+                .category(categoryOne)
+                .build();
+
+        when(skillService.createSkill(skill)).thenReturn(skill);
+
+        MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders.post("/api/skill/create")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(this.mapper.writeValueAsString(skill));
+
+        mockMvc.perform(mockRequest)
+                .andExpect(status().isForbidden());
+    }
+
+    @WithMockUser(authorities = "MANAGER")
+    @Test
+    public void updateSkill_success_manager() throws Exception {
         Skill skill = Skill.builder()
                 .id(1L)
                 .name("Skill One")
@@ -136,6 +193,27 @@ public class SkillControllerTest {
                 .andExpect(jsonPath("$.name", is("Skill One")));
     }
 
+    @WithMockUser(authorities = "STAFF")
+    @Test
+    public void updateSkill_forbidden_staff() throws Exception {
+        Skill skill = Skill.builder()
+                .id(1L)
+                .name("Skill One")
+                .category(categoryOne)
+                .build();
+
+        when(skillService.updateSkill(skill)).thenReturn(skill);
+
+        MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders.put("/api/skill/update")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(this.mapper.writeValueAsString(skill));
+
+        mockMvc.perform(mockRequest)
+                .andExpect(status().isForbidden());
+    }
+
+    @WithMockUser(authorities = "MANAGER")
     @Test
     public void updateSkill_nullId() throws Exception {
         Skill skill = Skill.builder()
@@ -158,14 +236,25 @@ public class SkillControllerTest {
                 );
     }
 
+    @WithMockUser(authorities = "MANAGER")
     @Test
-    public void deleteSkill_success() throws Exception {
+    public void deleteSkill_success_manager() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders
                 .delete("/api/skill/delete/1")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
 
+    @WithMockUser(authorities = "STAFF")
+    @Test
+    public void deleteSkill_forbidden_staff() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders
+                        .delete("/api/skill/delete/1")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden());
+    }
+
+    @WithMockUser(authorities = "MANAGER")
     @Test
     public void deleteSkill_notFound() throws Exception {
         doThrow(new SkillDoesNotExistException("Skill not found with that id")).when(skillService).deleteSkillById(1L);

@@ -1,6 +1,6 @@
-INSERT INTO app_user (firstname, surname, email, password, user_role) VALUES ('Test', 'Staff', 'test@staff.com', 'password', 'STAFF');
-INSERT INTO app_user (firstname, surname, email, password, user_role) VALUES ('Test', 'Manager', 'test@manager.com', 'password', 'MANAGER');
-INSERT INTO app_user (firstname, surname, email, password, user_role) VALUES ('Staffy', 'Staff', 'test@staffy.com', 'password', 'STAFF');
+INSERT INTO app_user (firstname, surname, email, password, user_role) VALUES ('Test', 'Staff', 'test@staff.com', '$2a$10$vvmS9h8e6cQjkXikKdR23ez3H2p3vjdq81F2RgtgsMwsJ7XqkRpQG', 'STAFF');
+INSERT INTO app_user (firstname, surname, email, password, user_role) VALUES ('Test', 'Manager', 'test@manager.com', '$2a$10$vvmS9h8e6cQjkXikKdR23ez3H2p3vjdq81F2RgtgsMwsJ7XqkRpQG', 'MANAGER');
+INSERT INTO app_user (firstname, surname, email, password, user_role) VALUES ('Staffy', 'Staff', 'test@staffy.com', '$2a$10$vvmS9h8e6cQjkXikKdR23ez3H2p3vjdq81F2RgtgsMwsJ7XqkRpQG', 'STAFF');
 
 INSERT INTO manager (user_id) VALUES (2);
 INSERT INTO staff (user_id, manager_id) VALUES (1, 2);

@@ -16,6 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -40,6 +42,8 @@ public class StaffControllerTest {
     ObjectMapper mapper;
 
     @MockBean
+    UserDetailsService userDetailsService;
+    @MockBean
     StaffService staffService;
 
     AppUser appUserManager = new AppUser(3L, "Test", "User", "test@user.com", "password", UserRole.MANAGER, "Test User");
@@ -63,8 +67,9 @@ public class StaffControllerTest {
     Staff staffOne = new Staff(1L, appUserStaffOne, appUserManager, staffSkillsOne);
     Staff staffTwo = new Staff(2L, appUserStaffTwo, appUserManager, staffSkillsTwo);
 
+    @WithMockUser(authorities = "MANAGER")
     @Test
-    public void findAllStaff_success() throws Exception {
+    public void findAllStaff_success_manager() throws Exception {
         List<Staff> records = new ArrayList<>(List.of(staffOne, staffTwo));
 
         when(staffService.findAllStaff()).thenReturn(records);
@@ -78,8 +83,25 @@ public class StaffControllerTest {
                 .andExpect(jsonPath("$[1].userDetails.surname", is(staffTwo.getUserDetails().getSurname())));
     }
 
+    @WithMockUser(authorities = "STAFF")
     @Test
-    public void findById_success() throws Exception {
+    public void findAllStaff_success_staff() throws Exception {
+        List<Staff> records = new ArrayList<>(List.of(staffOne, staffTwo));
+
+        when(staffService.findAllStaff()).thenReturn(records);
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get("/api/staff/")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(2)))
+                .andExpect(jsonPath("$[0].userDetails.surname", is(staffOne.getUserDetails().getSurname())))
+                .andExpect(jsonPath("$[1].userDetails.surname", is(staffTwo.getUserDetails().getSurname())));
+    }
+
+    @WithMockUser(authorities = "MANAGER")
+    @Test
+    public void findById_success_manager() throws Exception {
         when(staffService.findStaffById(1L)).thenReturn(java.util.Optional.ofNullable(staffOne));
 
         mockMvc.perform(MockMvcRequestBuilders
@@ -90,6 +112,20 @@ public class StaffControllerTest {
                 .andExpect(jsonPath("$.userDetails.surname", is(staffOne.getUserDetails().getSurname())));
     }
 
+    @WithMockUser(authorities = "STAFF")
+    @Test
+    public void findById_success_staff() throws Exception {
+        when(staffService.findStaffById(1L)).thenReturn(java.util.Optional.ofNullable(staffOne));
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get("/api/staff/1")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", notNullValue()))
+                .andExpect(jsonPath("$.userDetails.surname", is(staffOne.getUserDetails().getSurname())));
+    }
+
+    @WithMockUser(authorities = "MANAGER")
     @Test
     public void findById_notFound() throws Exception {
         when(staffService.findStaffById(1L)).thenThrow(new StaffDoesNotExistException("Staff not found with that id"));
@@ -104,8 +140,9 @@ public class StaffControllerTest {
                 );
     }
 
+    @WithMockUser(authorities = "MANAGER")
     @Test
-    public void findByName_success() throws Exception {
+    public void findByName_success_manager() throws Exception {
         List<Staff> records = new ArrayList<>(List.of(staffOne, staffTwo));
         when(staffService.findStaffByName("test")).thenReturn(records);
 
@@ -118,6 +155,22 @@ public class StaffControllerTest {
                 .andExpect(jsonPath("$[1].userDetails.surname", is(staffTwo.getUserDetails().getSurname())));
     }
 
+    @WithMockUser(authorities = "STAFF")
+    @Test
+    public void findByName_success_staff() throws Exception {
+        List<Staff> records = new ArrayList<>(List.of(staffOne, staffTwo));
+        when(staffService.findStaffByName("test")).thenReturn(records);
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get("/api/staff/search/test")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(2)))
+                .andExpect(jsonPath("$[0].userDetails.surname", is(staffOne.getUserDetails().getSurname())))
+                .andExpect(jsonPath("$[1].userDetails.surname", is(staffTwo.getUserDetails().getSurname())));
+    }
+
+    @WithMockUser(authorities = "MANAGER")
     @Test
     public void findByName_noMatch() throws Exception {
         List<Staff> records = new ArrayList<>(List.of());
@@ -130,8 +183,9 @@ public class StaffControllerTest {
                 .andExpect(jsonPath("$", hasSize(0)));
     }
 
+    @WithMockUser(authorities = "MANAGER")
     @Test
-    public void createStaff_success() throws Exception {
+    public void createStaff_success_manager() throws Exception {
         Staff staff = Staff.builder()
                 .userDetails(appUserStaffOne)
                 .managerDetails(appUserManager)
@@ -151,6 +205,27 @@ public class StaffControllerTest {
                 .andExpect(jsonPath("$.userDetails.surname", is(staffOne.getUserDetails().getSurname())));
     }
 
+    @WithMockUser(authorities = "STAFF")
+    @Test
+    public void createStaff_forbidden_staff() throws Exception {
+        Staff staff = Staff.builder()
+                .userDetails(appUserStaffOne)
+                .managerDetails(appUserManager)
+                .skills(staffSkillsEmpty)
+                .build();
+
+        when(staffService.createStaff(ArgumentMatchers.any())).thenReturn(staff);
+
+        MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders.post("/api/staff/create")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(this.mapper.writeValueAsString(staff));
+
+        mockMvc.perform(mockRequest)
+                .andExpect(status().isForbidden());
+    }
+
+    @WithMockUser(authorities = "MANAGER")
     @Test
     public void createStaff_noManager() throws Exception {
         Staff staff = Staff.builder()
@@ -174,8 +249,9 @@ public class StaffControllerTest {
                 );
     }
 
+    @WithMockUser(authorities = "MANAGER")
     @Test
-    public void updateStaff_success() throws Exception {
+    public void updateStaff_success_manager() throws Exception {
         Staff staff = Staff.builder()
                 .id(1L)
                 .userDetails(appUserStaffTwo)
@@ -196,6 +272,30 @@ public class StaffControllerTest {
                 .andExpect(jsonPath("$.userDetails.surname", is(appUserStaffTwo.getSurname())));
     }
 
+    @WithMockUser(authorities = "STAFF")
+    @Test
+    public void updateStaff_success_staff() throws Exception {
+        Staff staff = Staff.builder()
+                .id(1L)
+                .userDetails(appUserStaffTwo)
+                .managerDetails(appUserManager)
+                .skills(staffSkillsEmpty)
+                .build();
+
+        when(staffService.updateStaff(ArgumentMatchers.any())).thenReturn(staff);
+
+        MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders.put("/api/staff/update")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(this.mapper.writeValueAsString(staff));
+
+        mockMvc.perform(mockRequest)
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", notNullValue()))
+                .andExpect(jsonPath("$.userDetails.surname", is(appUserStaffTwo.getSurname())));
+    }
+
+    @WithMockUser(authorities = "MANAGER")
     @Test
     public void updateStaff_noId() throws Exception {
         Staff staff = Staff.builder()

@@ -32,6 +32,7 @@ public class AppUser {
     private String email;
 
     @Column(name = AppUserConstants.PASSWORD)
+    @JsonIgnore
     private String password;
 
     @Column(name = AppUserConstants.USER_ROLE)

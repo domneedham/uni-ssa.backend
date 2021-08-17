@@ -8,7 +8,9 @@ import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
-@RequestMapping("/api/skill")
+import static com.example.ssa.constants.HttpMapping.SKILL_MAPPING;
+
+@RequestMapping(SKILL_MAPPING)
 @RestController
 public class SkillController {
     private final SkillService skillService;

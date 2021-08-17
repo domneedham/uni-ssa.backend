@@ -2,11 +2,14 @@ package com.example.ssa.web.api;
 
 import com.example.ssa.entity.user.Staff;
 import com.example.ssa.service.StaffService;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
-@RequestMapping("api/staff")
+import static com.example.ssa.constants.HttpMapping.STAFF_MAPPING;
+
+@RequestMapping(STAFF_MAPPING)
 @RestController
 public class StaffController {
     private final StaffService staffService;
@@ -28,6 +31,11 @@ public class StaffController {
     @GetMapping("/search/{name}")
     public List<Staff> findByName(@PathVariable(value = "name") String name) {
         return staffService.findStaffByName(name);
+    }
+
+    @GetMapping("/email/{email}")
+    public Optional<Staff> findByEmail(@PathVariable(value = "email") String email) {
+        return staffService.findStaffByEmail(email);
     }
 
     @PostMapping("/create")

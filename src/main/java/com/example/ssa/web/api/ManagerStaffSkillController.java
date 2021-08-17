@@ -7,7 +7,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
-@RequestMapping("/api/skill/manager")
+import static com.example.ssa.constants.HttpMapping.MANAGER_STAFF_SKILL_MAPPING;
+
+@RequestMapping(MANAGER_STAFF_SKILL_MAPPING)
 @RestController
 public class ManagerStaffSkillController {
     private final ManagerStaffSkillService managerStaffSkillService;
