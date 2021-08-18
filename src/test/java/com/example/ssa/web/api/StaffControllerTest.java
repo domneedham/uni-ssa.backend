@@ -102,7 +102,7 @@ public class StaffControllerTest {
     @WithMockUser(authorities = "MANAGER")
     @Test
     public void findById_success_manager() throws Exception {
-        when(staffService.findStaffById(1L)).thenReturn(java.util.Optional.ofNullable(staffOne));
+        when(staffService.findStaffById(1L)).thenReturn(java.util.Optional.of(staffOne));
 
         mockMvc.perform(MockMvcRequestBuilders
                         .get("/api/staff/1")
@@ -115,7 +115,7 @@ public class StaffControllerTest {
     @WithMockUser(authorities = "STAFF")
     @Test
     public void findById_success_staff() throws Exception {
-        when(staffService.findStaffById(1L)).thenReturn(java.util.Optional.ofNullable(staffOne));
+        when(staffService.findStaffById(1L)).thenReturn(java.util.Optional.of(staffOne));
 
         mockMvc.perform(MockMvcRequestBuilders
                         .get("/api/staff/1")

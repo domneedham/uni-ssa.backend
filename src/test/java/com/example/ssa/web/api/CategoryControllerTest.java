@@ -99,7 +99,7 @@ public class CategoryControllerTest {
     @WithMockUser(authorities = "MANAGER")
     @Test
     public void findById_success_manager() throws Exception {
-        when(categoryService.findCategoryById(1L)).thenReturn(java.util.Optional.ofNullable(categoryOne));
+        when(categoryService.findCategoryById(1L)).thenReturn(java.util.Optional.of(categoryOne));
 
         mockMvc.perform(MockMvcRequestBuilders
                         .get("/api/category/1")
@@ -112,7 +112,7 @@ public class CategoryControllerTest {
     @WithMockUser(authorities = "STAFF")
     @Test
     public void findById_success_staff() throws Exception {
-        when(categoryService.findCategoryById(1L)).thenReturn(java.util.Optional.ofNullable(categoryOne));
+        when(categoryService.findCategoryById(1L)).thenReturn(java.util.Optional.of(categoryOne));
 
         mockMvc.perform(MockMvcRequestBuilders
                         .get("/api/category/1")

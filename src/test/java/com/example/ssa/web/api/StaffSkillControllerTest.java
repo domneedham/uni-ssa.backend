@@ -105,7 +105,7 @@ public class StaffSkillControllerTest {
     @WithMockUser(authorities = "MANAGER")
     @Test
     public void findById_success_manager() throws Exception {
-        when(staffSkillService.findStaffSkillById(1L)).thenReturn(java.util.Optional.ofNullable(staffSkillOne));
+        when(staffSkillService.findStaffSkillById(1L)).thenReturn(java.util.Optional.of(staffSkillOne));
 
         mockMvc.perform(MockMvcRequestBuilders
                         .get("/api/skill/staff/1")
@@ -119,7 +119,7 @@ public class StaffSkillControllerTest {
     @WithMockUser(authorities = "STAFF")
     @Test
     public void findById_success_staff() throws Exception {
-        when(staffSkillService.findStaffSkillById(1L)).thenReturn(java.util.Optional.ofNullable(staffSkillOne));
+        when(staffSkillService.findStaffSkillById(1L)).thenReturn(java.util.Optional.of(staffSkillOne));
 
         mockMvc.perform(MockMvcRequestBuilders
                         .get("/api/skill/staff/1")
@@ -148,7 +148,7 @@ public class StaffSkillControllerTest {
     @WithMockUser(authorities = "MANAGER")
     @Test
     public void findBySkillIdAndStaffId_success_manager() throws Exception {
-        when(staffSkillService.findStaffSkillBySkillIdAndStaffId(1L, 1L)).thenReturn(java.util.Optional.ofNullable(staffSkillOne));
+        when(staffSkillService.findStaffSkillBySkillIdAndStaffId(1L, 1L)).thenReturn(java.util.Optional.of(staffSkillOne));
 
         mockMvc.perform(MockMvcRequestBuilders
                         .get("/api/skill/staff/1/sid/1")
@@ -162,7 +162,7 @@ public class StaffSkillControllerTest {
     @WithMockUser(authorities = "STAFF")
     @Test
     public void findBySkillIdAndStaffId_success_staff() throws Exception {
-        when(staffSkillService.findStaffSkillBySkillIdAndStaffId(1L, 1L)).thenReturn(java.util.Optional.ofNullable(staffSkillOne));
+        when(staffSkillService.findStaffSkillBySkillIdAndStaffId(1L, 1L)).thenReturn(java.util.Optional.of(staffSkillOne));
 
         mockMvc.perform(MockMvcRequestBuilders
                         .get("/api/skill/staff/1/sid/1")
