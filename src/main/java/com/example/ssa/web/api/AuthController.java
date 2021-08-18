@@ -60,7 +60,7 @@ public class AuthController {
                 response.setContentType(MediaType.APPLICATION_JSON_VALUE);
                 new ObjectMapper().writeValue(response.getOutputStream(), tokens);
             } catch (Exception e) {
-                log.error("Error logging in: {}", e.getMessage());
+                log.error("Error refreshing token: {}", e.getMessage());
                 response.setStatus(HttpServletResponse.SC_FORBIDDEN);
                 Map<String, String> error = new HashMap<>();
                 error.put("error", e.getMessage());

@@ -2,7 +2,6 @@ package com.example.ssa.entity.skill;
 
 import com.example.ssa.entity.skill.constants.StaffSkillConstants;
 import com.example.ssa.entity.user.AppUser;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 
 import javax.persistence.*;

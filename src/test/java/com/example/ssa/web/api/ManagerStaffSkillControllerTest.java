@@ -41,15 +41,15 @@ public class ManagerStaffSkillControllerTest {
     @MockBean
     ManagerStaffSkillService managerStaffSkillService;
 
-    AppUser appUserOne = new AppUser(1L, "Test", "User", "test@user.com", "password", UserRole.STAFF, "Test User");
-    AppUser appUserTwo = new AppUser(2L, "Test", "Two", "test@two.com", "password", UserRole.STAFF, "Test Two");
+    final AppUser appUserOne = new AppUser(1L, "Test", "User", "test@user.com", "password", UserRole.STAFF, "Test User");
+    final AppUser appUserTwo = new AppUser(2L, "Test", "Two", "test@two.com", "password", UserRole.STAFF, "Test Two");
 
-    Category category = new Category(1L, "Category One", 26530);
-    Skill skillOne = new Skill(1L, "Skill One", category);
-    Skill skillTwo = new Skill(2L, "Skill Two", category);
+    final Category category = new Category(1L, "Category One", 26530);
+    final Skill skillOne = new Skill(1L, "Skill One", category);
+    final Skill skillTwo = new Skill(2L, "Skill Two", category);
 
-    ManagerStaffSkill managerStaffSkillOne = new ManagerStaffSkill(1L, skillOne, List.of(appUserOne));
-    ManagerStaffSkill managerStaffSkillTwo = new ManagerStaffSkill(2L, skillTwo, List.of(appUserOne, appUserTwo));
+    final ManagerStaffSkill managerStaffSkillOne = new ManagerStaffSkill(1L, skillOne, List.of(appUserOne));
+    final ManagerStaffSkill managerStaffSkillTwo = new ManagerStaffSkill(2L, skillTwo, List.of(appUserOne, appUserTwo));
 
     @WithMockUser(authorities = "MANAGER")
     @Test

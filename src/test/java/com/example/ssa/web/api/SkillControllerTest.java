@@ -40,11 +40,11 @@ public class SkillControllerTest {
     @MockBean
     SkillService skillService;
 
-    Category categoryOne = new Category(1L, "Category One", 57718);
-    Category categoryTwo = new Category(2L, "Category Two", 57718);
+    final Category categoryOne = new Category(1L, "Category One", 57718);
+    final Category categoryTwo = new Category(2L, "Category Two", 57718);
 
-    Skill skillOne = new Skill(1L, "Skill One", categoryOne);
-    Skill skillTwo = new Skill(1L, "Skill Two", categoryTwo);
+    final Skill skillOne = new Skill(1L, "Skill One", categoryOne);
+    final Skill skillTwo = new Skill(1L, "Skill Two", categoryTwo);
 
     @WithMockUser(authorities = "MANAGER")
     @Test
@@ -79,7 +79,7 @@ public class SkillControllerTest {
     @WithMockUser(authorities = "MANAGER")
     @Test
     public void findAllSkills_empty() throws Exception {
-        List<Skill> records = new ArrayList<>(Arrays.asList());
+        List<Skill> records = new ArrayList<>(List.of());
 
         when(skillService.findAllSkills()).thenReturn(records);
 

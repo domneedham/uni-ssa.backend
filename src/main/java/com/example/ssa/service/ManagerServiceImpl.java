@@ -1,7 +1,6 @@
 package com.example.ssa.service;
 
 import com.example.ssa.entity.user.Manager;
-import com.example.ssa.entity.user.Staff;
 import com.example.ssa.exceptions.requests.bad.ManagerDoesNotExistException;
 import com.example.ssa.repository.ManagerRepository;
 import org.springframework.stereotype.Service;

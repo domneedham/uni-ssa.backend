@@ -43,12 +43,12 @@ public class CategoryControllerTest {
     @MockBean
     CategoryService categoryService;
 
-    Category categoryOne = new Category(1L, "Test Category One", 26932);
-    Category categoryTwo = new Category(2L, "Test Category Two", 19165);
+    final Category categoryOne = new Category(1L, "Test Category One", 26932);
+    final Category categoryTwo = new Category(2L, "Test Category Two", 19165);
 
-    Skill skillOne = new Skill(1L, "Skill One", categoryOne);
+    final Skill skillOne = new Skill(1L, "Skill One", categoryOne);
 
-    AppUser appUserOne = new AppUser(1L, "Test", "User", "test@user.com","password", UserRole.STAFF, "Test User");
+    final AppUser appUserOne = new AppUser(1L, "Test", "User", "test@user.com","password", UserRole.STAFF, "Test User");
 
     StaffSkill staffSkillOne = new StaffSkill(1L, skillOne, appUserOne, 5, LocalDateTime.now(), LocalDateTime.now().plusDays(30));
 
