@@ -58,7 +58,7 @@ public class StaffSkillServiceImpl implements StaffSkillService {
         Optional<StaffSkill> skillToUpdate = this.findStaffSkillBySkillIdAndStaffId(staffSkill.getSkill().getId(), staffSkill.getStaffDetails().getId());
 
         if (skillToUpdate.isEmpty()) {
-            throw new StaffSkillDoesNotExistException("Skill with that id not found");
+            throw new StaffSkillDoesNotExistException("Staff skill not found with that id");
         }
 
         skillToUpdate.get().setRating(staffSkill.getRating());

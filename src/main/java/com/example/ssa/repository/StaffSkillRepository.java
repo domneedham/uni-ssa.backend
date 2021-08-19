@@ -1,6 +1,5 @@
 package com.example.ssa.repository;
 
-import com.example.ssa.entity.skill.Skill;
 import com.example.ssa.entity.skill.StaffSkill;
 import org.springframework.data.jpa.repository.JpaRepository;
 

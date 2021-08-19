@@ -39,16 +39,16 @@ public class ManagerControllerTest {
     @MockBean
     ManagerService managerService;
 
-    AppUser appUserManagerOne = new AppUser(3L, "Test", "User", "test@user.com", "password",UserRole.MANAGER, "Test User");
-    AppUser appUserManagerTwo = new AppUser(3L, "Test", "Manager", "test@manager.com","password", UserRole.MANAGER, "Test Manager");
-    AppUser appUserStaffOne = new AppUser(1L, "Test", "User", "test@user.com", "password",UserRole.STAFF, "Test User");
-    AppUser appUserStaffTwo = new AppUser(2L, "Test", "Manager", "test@manager.com", "password",UserRole.STAFF, "Test Manager");
+    final AppUser appUserManagerOne = new AppUser(3L, "Test", "User", "test@user.com", "password",UserRole.MANAGER, "Test User");
+    final AppUser appUserManagerTwo = new AppUser(3L, "Test", "Manager", "test@manager.com","password", UserRole.MANAGER, "Test Manager");
+    final AppUser appUserStaffOne = new AppUser(1L, "Test", "User", "test@user.com", "password",UserRole.STAFF, "Test User");
+    final AppUser appUserStaffTwo = new AppUser(2L, "Test", "Manager", "test@manager.com", "password",UserRole.STAFF, "Test Manager");
 
-    List<AppUser> staffListOne = new ArrayList<>(List.of(appUserStaffOne));
-    List<AppUser> staffListTwo = new ArrayList<>(List.of(appUserStaffTwo));
+    final List<AppUser> staffListOne = new ArrayList<>(List.of(appUserStaffOne));
+    final List<AppUser> staffListTwo = new ArrayList<>(List.of(appUserStaffTwo));
 
-    Manager managerOne = new Manager(3L, appUserManagerOne, staffListOne);
-    Manager managerTwo = new Manager(3L, appUserManagerTwo, staffListTwo);
+    final Manager managerOne = new Manager(3L, appUserManagerOne, staffListOne);
+    final Manager managerTwo = new Manager(3L, appUserManagerTwo, staffListTwo);
 
     @WithMockUser(authorities = "MANAGER")
     @Test
@@ -82,7 +82,7 @@ public class ManagerControllerTest {
     @WithMockUser(authorities = "MANAGER")
     @Test
     public void findById_success_manager() throws Exception {
-        when(managerService.findManagerById(1L)).thenReturn(java.util.Optional.ofNullable(managerOne));
+        when(managerService.findManagerById(1L)).thenReturn(java.util.Optional.of(managerOne));
 
         mockMvc.perform(MockMvcRequestBuilders
                         .get("/api/manager/1")
@@ -95,7 +95,7 @@ public class ManagerControllerTest {
     @WithMockUser(authorities = "STAFF")
     @Test
     public void findById_success_staff() throws Exception {
-        when(managerService.findManagerById(1L)).thenReturn(java.util.Optional.ofNullable(managerOne));
+        when(managerService.findManagerById(1L)).thenReturn(java.util.Optional.of(managerOne));
 
         mockMvc.perform(MockMvcRequestBuilders
                         .get("/api/manager/1")

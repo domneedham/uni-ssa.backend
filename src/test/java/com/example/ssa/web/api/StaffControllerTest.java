@@ -46,26 +46,26 @@ public class StaffControllerTest {
     @MockBean
     StaffService staffService;
 
-    AppUser appUserManager = new AppUser(3L, "Test", "User", "test@user.com", "password", UserRole.MANAGER, "Test User");
-    AppUser appUserStaffOne = new AppUser(1L, "Test", "User", "test@user.com","password", UserRole.STAFF, "Test User");
-    AppUser appUserStaffTwo = new AppUser(2L, "Test", "Staff", "test@staff.com", "password", UserRole.STAFF, "Test Staff");
+    final AppUser appUserManager = new AppUser(3L, "Test", "User", "test@user.com", "password", UserRole.MANAGER, "Test User");
+    final AppUser appUserStaffOne = new AppUser(1L, "Test", "User", "test@user.com","password", UserRole.STAFF, "Test User");
+    final AppUser appUserStaffTwo = new AppUser(2L, "Test", "Staff", "test@staff.com", "password", UserRole.STAFF, "Test Staff");
 
-    Category categoryOne = new Category(1L, "Category One", 57718);
-    Category categoryTwo = new Category(2L, "Category Two", 57718);
+    final Category categoryOne = new Category(1L, "Category One", 57718);
+    final Category categoryTwo = new Category(2L, "Category Two", 57718);
 
-    Skill skillOne = new Skill(1L, "Skill One", categoryOne);
-    Skill skillTwo = new Skill(2L, "Skill Two", categoryTwo);
+    final Skill skillOne = new Skill(1L, "Skill One", categoryOne);
+    final Skill skillTwo = new Skill(2L, "Skill Two", categoryTwo);
 
-    StaffSkill staffSkillOneOne = new StaffSkill(1L, skillOne, appUserStaffOne, 5, LocalDateTime.now(), LocalDateTime.now().plusDays(30));
-    StaffSkill staffSkillOneTwo = new StaffSkill(2L, skillTwo, appUserStaffOne, 5, LocalDateTime.now(), LocalDateTime.now().plusDays(30));
-    StaffSkill staffSkillTwoOne = new StaffSkill(1L, skillOne, appUserStaffOne, 5, LocalDateTime.now(), LocalDateTime.now().plusDays(30));
-    StaffSkill staffSkillTwoTwo = new StaffSkill(2L, skillTwo, appUserStaffOne, 5, LocalDateTime.now(), LocalDateTime.now().plusDays(30));
-    List<StaffSkill> staffSkillsOne = new ArrayList<>(List.of(staffSkillOneOne, staffSkillOneTwo));
-    List<StaffSkill> staffSkillsTwo = new ArrayList<>(List.of(staffSkillTwoOne, staffSkillTwoTwo));
-    List<StaffSkill> staffSkillsEmpty = new ArrayList<>();
+    final StaffSkill staffSkillOneOne = new StaffSkill(1L, skillOne, appUserStaffOne, 5, LocalDateTime.now(), LocalDateTime.now().plusDays(30));
+    final StaffSkill staffSkillOneTwo = new StaffSkill(2L, skillTwo, appUserStaffOne, 5, LocalDateTime.now(), LocalDateTime.now().plusDays(30));
+    final StaffSkill staffSkillTwoOne = new StaffSkill(1L, skillOne, appUserStaffOne, 5, LocalDateTime.now(), LocalDateTime.now().plusDays(30));
+    final StaffSkill staffSkillTwoTwo = new StaffSkill(2L, skillTwo, appUserStaffOne, 5, LocalDateTime.now(), LocalDateTime.now().plusDays(30));
+    final List<StaffSkill> staffSkillsOne = new ArrayList<>(List.of(staffSkillOneOne, staffSkillOneTwo));
+    final List<StaffSkill> staffSkillsTwo = new ArrayList<>(List.of(staffSkillTwoOne, staffSkillTwoTwo));
+    final List<StaffSkill> staffSkillsEmpty = new ArrayList<>();
 
-    Staff staffOne = new Staff(1L, appUserStaffOne, appUserManager, staffSkillsOne);
-    Staff staffTwo = new Staff(2L, appUserStaffTwo, appUserManager, staffSkillsTwo);
+    final Staff staffOne = new Staff(1L, appUserStaffOne, appUserManager, staffSkillsOne);
+    final Staff staffTwo = new Staff(2L, appUserStaffTwo, appUserManager, staffSkillsTwo);
 
     @WithMockUser(authorities = "MANAGER")
     @Test
@@ -102,7 +102,7 @@ public class StaffControllerTest {
     @WithMockUser(authorities = "MANAGER")
     @Test
     public void findById_success_manager() throws Exception {
-        when(staffService.findStaffById(1L)).thenReturn(java.util.Optional.ofNullable(staffOne));
+        when(staffService.findStaffById(1L)).thenReturn(java.util.Optional.of(staffOne));
 
         mockMvc.perform(MockMvcRequestBuilders
                         .get("/api/staff/1")
@@ -115,7 +115,7 @@ public class StaffControllerTest {
     @WithMockUser(authorities = "STAFF")
     @Test
     public void findById_success_staff() throws Exception {
-        when(staffService.findStaffById(1L)).thenReturn(java.util.Optional.ofNullable(staffOne));
+        when(staffService.findStaffById(1L)).thenReturn(java.util.Optional.of(staffOne));
 
         mockMvc.perform(MockMvcRequestBuilders
                         .get("/api/staff/1")

@@ -40,7 +40,7 @@ public class SkillController {
     }
 
     @PutMapping("/update")
-    public Skill update(@RequestBody Skill skill) throws Exception {
+    public Skill update(@RequestBody Skill skill) {
         return skillService.updateSkill(skill);
     }
 

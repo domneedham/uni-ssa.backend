@@ -1,7 +1,6 @@
 package com.example.ssa.service;
 
 import com.example.ssa.entity.user.Manager;
-import com.example.ssa.entity.user.Staff;
 import com.example.ssa.exceptions.requests.bad.ManagerDoesNotExistException;
 import com.example.ssa.repository.ManagerRepository;
 import org.springframework.stereotype.Service;
@@ -48,7 +47,7 @@ public class ManagerServiceImpl implements ManagerService {
         Optional<Manager> manager = managerRepository.findByUserDetailsEmail(email);
 
         if (manager.isEmpty()) {
-            throw new ManagerDoesNotExistException("Manager not found with that id");
+            throw new ManagerDoesNotExistException("Manager not found with that email");
         }
 
         return manager;
