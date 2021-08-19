@@ -47,7 +47,7 @@ public class ManagerServiceImpl implements ManagerService {
         Optional<Manager> manager = managerRepository.findByUserDetailsEmail(email);
 
         if (manager.isEmpty()) {
-            throw new ManagerDoesNotExistException("Manager not found with that id");
+            throw new ManagerDoesNotExistException("Manager not found with that email");
         }
 
         return manager;
