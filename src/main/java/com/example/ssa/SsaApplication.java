@@ -5,6 +5,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import java.security.SecureRandom;
+
 @SpringBootApplication
 public class SsaApplication {
 
@@ -14,6 +16,7 @@ public class SsaApplication {
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+        final int strength = 10;
+        return new BCryptPasswordEncoder(strength, new SecureRandom());
     }
 }
