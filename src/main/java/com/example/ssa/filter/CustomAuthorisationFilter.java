@@ -1,9 +1,7 @@
 package com.example.ssa.filter;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.JWTVerifier;
-import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.example.ssa.security.JWTConfig;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
@@ -33,18 +31,22 @@ public class CustomAuthorisationFilter extends OncePerRequestFilter {
         // ignore login request
         if (request.getServletPath().startsWith("/api/auth/")) {
             filterChain.doFilter(request, response);
+        // filter all others
         } else {
             String authorisationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
-            if (authorisationHeader != null && authorisationHeader.startsWith("Bearer ")) {
+            if (JWTConfig.isAuthHeaderValid(authorisationHeader)) {
                 try {
-                    String token = authorisationHeader.substring("Bearer ".length());
-                    Algorithm algorithm = Algorithm.HMAC256("secret".getBytes());
-                    JWTVerifier verifier = JWT.require(algorithm).build();
-                    DecodedJWT decodedJWT = verifier.verify(token);
+                    // decode token
+                    String token = JWTConfig.getTokenFromHeader(authorisationHeader);
+                    DecodedJWT decodedJWT = JWTConfig.decodeJWT(token);
                     String username = decodedJWT.getSubject();
+
+                    // populate roles from token
                     String[] roles = decodedJWT.getClaim("roles").asArray(String.class);
                     Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
                     stream(roles).forEach(role -> authorities.add(new SimpleGrantedAuthority(role)));
+
+                    // get and set authentication token for handles to use
                     UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, null, authorities);
                     SecurityContextHolder.getContext().setAuthentication(authenticationToken);
                     filterChain.doFilter(request, response);

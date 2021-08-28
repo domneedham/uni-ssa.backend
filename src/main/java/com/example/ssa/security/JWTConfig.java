@@ -14,17 +14,26 @@ public class JWTConfig {
     public static final String ACCESS_TOKEN = "access_token";
     public static final String REFRESH_TOKEN = "refresh_token";
 
-    public static final Algorithm algorithm = Algorithm.HMAC256("secret".getBytes());
+    public static final Algorithm algorithm = Algorithm.HMAC256("aBg3hyL1TVDge6ys".getBytes());
 
     public static Date getAccessTokenExpiry() {
-        // 15 minutes
-        return new Date(System.currentTimeMillis() + 15 * 60 * 1000);
+        // 5 minutes
+        return new Date(System.currentTimeMillis() + 5 * 60 * 1000);
     }
 
     public static Date getRefreshTokenExpiry() {
         // 4 weeks
         return new Date(System.currentTimeMillis() + 40320L * 60 * 1000);
     }
+
+    public static boolean isAuthHeaderValid(String header) {
+        return header != null && header.startsWith("Bearer ");
+    }
+
+    public static String getTokenFromHeader(String header) {
+        return header.substring("Bearer ".length());
+    }
+
 
     public static String encodeAccessJWT(String username, String URL, List<String> roles) {
         return JWT.create()

@@ -33,15 +33,19 @@ public class AuthController {
     public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String authorisationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
 
-        if (authorisationHeader != null && authorisationHeader.startsWith("Bearer ")) {
+        if (JWTConfig.isAuthHeaderValid(authorisationHeader)) {
             try {
                 log.info("Refreshing token");
 
-                String token = authorisationHeader.substring("Bearer ".length());
+                // decode token
+                String token = JWTConfig.getTokenFromHeader(authorisationHeader);
                 DecodedJWT decodedJWT = JWTConfig.decodeJWT(token);
+
+                // get user from username
                 String username = decodedJWT.getSubject();
                 AppUser user = appUserService.findByEmail(username);
 
+                // encode new access token
                 List<String> roles = List.of(user.getUserRole().toString());
                 String accessToken = JWTConfig.encodeAccessJWT(user.getEmail(), request.getRequestURL().toString(), roles);
 
