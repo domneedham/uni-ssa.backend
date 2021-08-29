@@ -82,7 +82,7 @@ public class ManagerControllerTest {
     @WithMockUser(authorities = "MANAGER")
     @Test
     public void findById_success_manager() throws Exception {
-        when(managerService.findManagerById(1L)).thenReturn(java.util.Optional.of(managerOne));
+        when(managerService.findManagerById(1L)).thenReturn(managerOne);
 
         mockMvc.perform(MockMvcRequestBuilders
                         .get("/api/manager/1")
@@ -95,7 +95,7 @@ public class ManagerControllerTest {
     @WithMockUser(authorities = "STAFF")
     @Test
     public void findById_success_staff() throws Exception {
-        when(managerService.findManagerById(1L)).thenReturn(java.util.Optional.of(managerOne));
+        when(managerService.findManagerById(1L)).thenReturn(managerOne);
 
         mockMvc.perform(MockMvcRequestBuilders
                         .get("/api/manager/1")

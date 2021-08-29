@@ -22,7 +22,6 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
-@SuppressWarnings("OptionalGetWithoutIsPresent")
 @RunWith(MockitoJUnitRunner.class)
 public class ManagerStaffSkillServiceTest {
     @Mock
@@ -67,9 +66,9 @@ public class ManagerStaffSkillServiceTest {
     public void findSkillByIdShouldReturnTheFoundSkillIfExists() {
         when(managerStaffSkillRepository.findById(managerStaffSkillOne.getId())).thenReturn(Optional.of(managerStaffSkillOne));
 
-        Optional<ManagerStaffSkill> value = managerStaffSkillService.findManagerStaffSkillById(managerStaffSkillOne.getId());
+        ManagerStaffSkill value = managerStaffSkillService.findManagerStaffSkillById(managerStaffSkillOne.getId());
 
-        assertThat(value.get()).isSameAs(managerStaffSkillOne);
+        assertThat(value).isSameAs(managerStaffSkillOne);
     }
 
     @Test

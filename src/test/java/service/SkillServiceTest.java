@@ -2,12 +2,9 @@ package service;
 
 import com.example.ssa.entity.skill.Category;
 import com.example.ssa.entity.skill.Skill;
-import com.example.ssa.entity.skill.Skill;
 import com.example.ssa.exceptions.requests.bad.SkillDoesNotExistException;
 import com.example.ssa.repository.SkillRepository;
-import com.example.ssa.repository.SkillRepository;
 import com.example.ssa.repository.StaffSkillRepository;
-import com.example.ssa.service.SkillServiceImpl;
 import com.example.ssa.service.SkillServiceImpl;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -66,9 +63,9 @@ public class SkillServiceTest {
     public void findSkillByIdShouldReturnTheFoundSkillIfExists() {
         when(skillRepository.findById(skillOne.getId())).thenReturn(Optional.of(skillOne));
 
-        Optional<Skill> value = skillService.findSkillById(skillOne.getId());
+        Skill value = skillService.findSkillById(skillOne.getId());
 
-        assertThat(value.get()).isSameAs(skillOne);
+        assertThat(value).isSameAs(skillOne);
     }
 
     @Test

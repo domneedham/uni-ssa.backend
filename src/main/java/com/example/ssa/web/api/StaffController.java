@@ -23,7 +23,7 @@ public class StaffController {
     }
 
     @GetMapping("/{id}")
-    public Optional<Staff> findById(@PathVariable(value = "id") Long id) {
+    public Staff findById(@PathVariable(value = "id") Long id) {
         return staffService.findStaffById(id);
     }
 
@@ -33,7 +33,7 @@ public class StaffController {
     }
 
     @GetMapping("/email/{email}")
-    public Optional<Staff> findByEmail(@PathVariable(value = "email") String email) {
+    public Staff findByEmail(@PathVariable(value = "email") String email) {
         return staffService.findStaffByEmail(email);
     }
 

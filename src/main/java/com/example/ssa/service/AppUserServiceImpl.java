@@ -1,6 +1,7 @@
 package com.example.ssa.service;
 
 import com.example.ssa.entity.user.AppUser;
+import com.example.ssa.exceptions.requests.bad.AppUserDoesNotExistException;
 import com.example.ssa.repository.AppUserRepository;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,9 +15,20 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * A range of methods to handle AppUser CRUD operations.
+ */
 @Service
 public class AppUserServiceImpl implements AppUserService, UserDetailsService {
+
+    /**
+     * The app user repository created by Spring.
+     */
     private final AppUserRepository appUserRepository;
+
+    /**
+     * The password encoder used for hashing passwords.
+     */
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     public AppUserServiceImpl(AppUserRepository appUserRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
@@ -24,27 +36,59 @@ public class AppUserServiceImpl implements AppUserService, UserDetailsService {
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
+    /**
+     * Finds all app users that exist.
+     * @return A list of app users.
+     */
     @Override
     public List<AppUser> findAllAppUsers() {
         return appUserRepository.findAll();
     }
 
+    /**
+     * Finds the app user with the given id.
+     * @param id The id of the app user.
+     * @return The app user found.
+     * @throws AppUserDoesNotExistException If the app user does not exist.
+     */
     @Override
-    public Optional<AppUser> findAppUserById(Long id) {
-        return appUserRepository.findById(id);
+    public AppUser findAppUserById(Long id) throws AppUserDoesNotExistException {
+        Optional<AppUser> appUser = appUserRepository.findById(id);
+
+        if (appUser.isEmpty()) {
+            throw new AppUserDoesNotExistException("User not found with that id");
+        }
+
+        return appUser.get();
     }
 
+    /**
+     * Creates an app user. Hashes the password before saving the password encoder.
+     * @param appUser The app user to create.
+     * @return The created app user.
+     */
     @Override
     public AppUser createAppUser(AppUser appUser) {
         appUser.setPassword(bCryptPasswordEncoder.encode(appUser.getPassword()));
         return appUserRepository.save(appUser);
     }
 
+    /**
+     * Finds an app user by their email address.
+     * @param email The email of the app user.
+     * @return The app user who has the email address provided.
+     */
     @Override
     public AppUser findByEmail(String email) {
         return appUserRepository.findByEmail(email);
     }
 
+    /**
+     * Loads a user, including their roles by their username (email).
+     * @param username The email address of the user.
+     * @return The user details Spring requires for authentication and authorisation.
+     * @throws UsernameNotFoundException If the user is not found.
+     */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         AppUser user = appUserRepository.findByEmail(username);

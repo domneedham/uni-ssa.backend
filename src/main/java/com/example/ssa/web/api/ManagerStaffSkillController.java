@@ -24,7 +24,7 @@ public class ManagerStaffSkillController {
     }
 
     @GetMapping("/{id}")
-    public Optional<ManagerStaffSkill> findById(@PathVariable("id") long id) {
+    public ManagerStaffSkill findById(@PathVariable("id") long id) {
         return managerStaffSkillService.findManagerStaffSkillById(id);
     }
 }

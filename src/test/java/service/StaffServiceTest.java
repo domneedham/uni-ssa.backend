@@ -26,7 +26,6 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
-@SuppressWarnings("OptionalGetWithoutIsPresent")
 @RunWith(MockitoJUnitRunner.class)
 public class StaffServiceTest {
     @Mock
@@ -53,7 +52,6 @@ public class StaffServiceTest {
     final StaffSkill staffSkillTwoTwo = new StaffSkill(2L, skillTwo, appUserStaffOne, 5, LocalDateTime.now(), LocalDateTime.now().plusDays(30));
     final List<StaffSkill> staffSkillsOne = new ArrayList<>(List.of(staffSkillOneOne, staffSkillOneTwo));
     final List<StaffSkill> staffSkillsTwo = new ArrayList<>(List.of(staffSkillTwoOne, staffSkillTwoTwo));
-    final List<StaffSkill> staffSkillsEmpty = new ArrayList<>();
 
     final Staff staffOne = new Staff(1L, appUserStaffOne, appUserManager, staffSkillsOne);
     final Staff staffTwo = new Staff(2L, appUserStaffTwo, appUserManager, staffSkillsTwo);
@@ -84,9 +82,9 @@ public class StaffServiceTest {
     public void findStaffByIdShouldReturnStaffIfExists() {
         when(staffRepository.findById(staffOne.getId())).thenReturn(Optional.of(staffOne));
 
-        Optional<Staff> value = staffService.findStaffById(staffOne.getId());
+        Staff value = staffService.findStaffById(staffOne.getId());
 
-        assertThat(value.get()).isSameAs(staffOne);
+        assertThat(value).isSameAs(staffOne);
     }
 
     @Test
@@ -175,9 +173,9 @@ public class StaffServiceTest {
     public void findStaffByEmailShouldReturnStaffIfExists() {
         when(staffRepository.findByUserDetailsEmail(staffOne.getUserDetails().getEmail())).thenReturn(Optional.of(staffOne));
 
-        Optional<Staff> value = staffService.findStaffByEmail(staffOne.getUserDetails().getEmail());
+        Staff value = staffService.findStaffByEmail(staffOne.getUserDetails().getEmail());
 
-        assertThat(value.get()).isSameAs(staffOne);
+        assertThat(value).isSameAs(staffOne);
     }
 
     @Test

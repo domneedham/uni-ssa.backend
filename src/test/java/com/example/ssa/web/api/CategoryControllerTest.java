@@ -1,10 +1,6 @@
 package com.example.ssa.web.api;
 
 import com.example.ssa.entity.skill.Category;
-import com.example.ssa.entity.skill.Skill;
-import com.example.ssa.entity.skill.StaffSkill;
-import com.example.ssa.entity.user.AppUser;
-import com.example.ssa.entity.user.UserRole;
 import com.example.ssa.exceptions.requests.bad.CategoryDoesNotExistException;
 import com.example.ssa.service.CategoryService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -19,7 +15,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -45,12 +40,6 @@ public class CategoryControllerTest {
 
     final Category categoryOne = new Category(1L, "Test Category One", 26932);
     final Category categoryTwo = new Category(2L, "Test Category Two", 19165);
-
-    final Skill skillOne = new Skill(1L, "Skill One", categoryOne);
-
-    final AppUser appUserOne = new AppUser(1L, "Test", "User", "test@user.com","password", UserRole.STAFF, "Test User");
-
-    StaffSkill staffSkillOne = new StaffSkill(1L, skillOne, appUserOne, 5, LocalDateTime.now(), LocalDateTime.now().plusDays(30));
 
     @WithMockUser(authorities = "MANAGER")
     @Test
@@ -99,7 +88,7 @@ public class CategoryControllerTest {
     @WithMockUser(authorities = "MANAGER")
     @Test
     public void findById_success_manager() throws Exception {
-        when(categoryService.findCategoryById(1L)).thenReturn(java.util.Optional.of(categoryOne));
+        when(categoryService.findCategoryById(1L)).thenReturn(categoryOne);
 
         mockMvc.perform(MockMvcRequestBuilders
                         .get("/api/category/1")
@@ -112,7 +101,7 @@ public class CategoryControllerTest {
     @WithMockUser(authorities = "STAFF")
     @Test
     public void findById_success_staff() throws Exception {
-        when(categoryService.findCategoryById(1L)).thenReturn(java.util.Optional.of(categoryOne));
+        when(categoryService.findCategoryById(1L)).thenReturn(categoryOne);
 
         mockMvc.perform(MockMvcRequestBuilders
                         .get("/api/category/1")

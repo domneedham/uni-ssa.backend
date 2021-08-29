@@ -20,7 +20,6 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
-@SuppressWarnings("OptionalGetWithoutIsPresent")
 @RunWith(MockitoJUnitRunner.class)
 public class ManagerServiceTest {
     @Mock
@@ -66,9 +65,9 @@ public class ManagerServiceTest {
     public void findManagerByIdShouldReturnManagerIfExists() {
         when(managerRepository.findById(managerOne.getId())).thenReturn(Optional.of(managerOne));
 
-        Optional<Manager> value = managerService.findManagerById(managerOne.getId());
+        Manager value = managerService.findManagerById(managerOne.getId());
 
-        assertThat(value.get()).isSameAs(managerOne);
+        assertThat(value).isSameAs(managerOne);
     }
 
     @Test
@@ -119,9 +118,9 @@ public class ManagerServiceTest {
     public void findManagerByEmailShouldReturnManagerIfExists() {
         when(managerRepository.findByUserDetailsEmail(managerOne.getUserDetails().getEmail())).thenReturn(Optional.of(managerOne));
 
-        Optional<Manager> value = managerService.findManagerByEmail(managerOne.getUserDetails().getEmail());
+        Manager value = managerService.findManagerByEmail(managerOne.getUserDetails().getEmail());
 
-        assertThat(value.get()).isSameAs(managerOne);
+        assertThat(value).isSameAs(managerOne);
     }
 
     @Test

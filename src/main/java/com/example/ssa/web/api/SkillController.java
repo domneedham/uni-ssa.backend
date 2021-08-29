@@ -25,7 +25,7 @@ public class SkillController {
     }
 
     @GetMapping("/{id}")
-    public Optional<Skill> findById(@PathVariable("id") long id) throws RuntimeException {
+    public Skill findById(@PathVariable("id") long id) throws RuntimeException {
         return skillService.findSkillById(id);
     }
 

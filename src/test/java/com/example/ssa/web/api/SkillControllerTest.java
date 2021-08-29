@@ -93,7 +93,7 @@ public class SkillControllerTest {
     @WithMockUser(authorities = "MANAGER")
     @Test
     public void findById_success_manager() throws Exception {
-        when(skillService.findSkillById(1L)).thenReturn(java.util.Optional.of(skillOne));
+        when(skillService.findSkillById(1L)).thenReturn(skillOne);
 
         mockMvc.perform(MockMvcRequestBuilders
                         .get("/api/skill/1")
@@ -106,7 +106,7 @@ public class SkillControllerTest {
     @WithMockUser(authorities = "STAFF")
     @Test
     public void findById_success_staff() throws Exception {
-        when(skillService.findSkillById(1L)).thenReturn(java.util.Optional.of(skillOne));
+        when(skillService.findSkillById(1L)).thenReturn(skillOne);
 
         mockMvc.perform(MockMvcRequestBuilders
                         .get("/api/skill/1")

@@ -24,7 +24,7 @@ public class AppUserController {
     }
 
     @GetMapping("/{id}")
-    public Optional<AppUser> findById(@PathVariable(value = "id") Long id) {
+    public AppUser findById(@PathVariable(value = "id") Long id) {
         return appUserService.findAppUserById(id);
     }
 

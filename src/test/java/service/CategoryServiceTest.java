@@ -21,7 +21,6 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
-@SuppressWarnings("OptionalGetWithoutIsPresent")
 @RunWith(MockitoJUnitRunner.class)
 public class CategoryServiceTest {
     @Mock
@@ -65,9 +64,9 @@ public class CategoryServiceTest {
     public void findCategoryByIdShouldReturnTheFoundCategoryIfExists() {
         when(categoryRepository.findById(categoryOne.getId())).thenReturn(Optional.of(categoryOne));
 
-        Optional<Category> value = categoryService.findCategoryById(categoryOne.getId());
+        Category value = categoryService.findCategoryById(categoryOne.getId());
 
-        assertThat(value.get()).isSameAs(categoryOne);
+        assertThat(value).isSameAs(categoryOne);
     }
 
     @Test

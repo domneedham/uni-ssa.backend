@@ -5,7 +5,6 @@ import com.example.ssa.service.StaffSkillService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 import static com.example.ssa.constants.HttpMapping.STAFF_SKILL_MAPPING;
 
@@ -24,12 +23,12 @@ public class StaffSkillController {
     }
 
     @GetMapping("/{id}")
-    public Optional<StaffSkill> findById(@PathVariable("id") long id) throws RuntimeException {
+    public StaffSkill findById(@PathVariable("id") long id) throws RuntimeException {
         return staffSkillService.findStaffSkillById(id);
     }
 
     @GetMapping("{id}/sid/{sid}")
-    public Optional<StaffSkill> findBySkillIdAndStaffId(@PathVariable("id") long id, @PathVariable("sid") long sid) {
+    public StaffSkill findBySkillIdAndStaffId(@PathVariable("id") long id, @PathVariable("sid") long sid) {
         return staffSkillService.findStaffSkillBySkillIdAndStaffId(id, sid);
     }
 

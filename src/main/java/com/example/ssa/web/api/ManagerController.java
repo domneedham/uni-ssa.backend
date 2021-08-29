@@ -24,7 +24,7 @@ public class ManagerController {
     }
 
     @GetMapping("/{id}")
-    public Optional<Manager> findById(@PathVariable(value = "id") Long id) {
+    public Manager findById(@PathVariable(value = "id") Long id) {
         return managerService.findManagerById(id);
     }
 
@@ -34,7 +34,7 @@ public class ManagerController {
     }
 
     @GetMapping("/email/{email}")
-    public Optional<Manager> findByEmail(@PathVariable(value = "email") String email) {
+    public Manager findByEmail(@PathVariable(value = "email") String email) {
         return managerService.findManagerByEmail(email);
     }
 }

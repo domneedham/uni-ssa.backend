@@ -24,7 +24,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-@SuppressWarnings("OptionalGetWithoutIsPresent")
 @RunWith(MockitoJUnitRunner.class)
 public class StaffSkillServiceTest {
     @Mock
@@ -71,9 +70,9 @@ public class StaffSkillServiceTest {
     public void findSkillByIdShouldReturnTheFoundSkillIfExists() {
         when(staffSkillRepository.findById(staffSkillOne.getId())).thenReturn(Optional.of(staffSkillOne));
 
-        Optional<StaffSkill> value = staffSkillService.findStaffSkillById(staffSkillOne.getId());
+        StaffSkill value = staffSkillService.findStaffSkillById(staffSkillOne.getId());
 
-        assertThat(value.get()).isSameAs(staffSkillOne);
+        assertThat(value).isSameAs(staffSkillOne);
     }
 
     @Test
@@ -92,9 +91,9 @@ public class StaffSkillServiceTest {
     public void findSkillStaffByStaffIdAndSkillIdShouldReturnTheFoundSkillIfExists() {
         when(staffSkillRepository.findBySkillIdAndStaffDetailsId(staffSkillOne.getId(), staffSkillOne.getStaffDetails().getId())).thenReturn(Optional.of(staffSkillOne));
 
-        Optional<StaffSkill> value = staffSkillService.findStaffSkillBySkillIdAndStaffId(staffSkillOne.getId(), staffSkillOne.getStaffDetails().getId());
+        StaffSkill value = staffSkillService.findStaffSkillBySkillIdAndStaffId(staffSkillOne.getId(), staffSkillOne.getStaffDetails().getId());
 
-        assertThat(value.get()).isSameAs(staffSkillOne);
+        assertThat(value).isSameAs(staffSkillOne);
     }
 
     @Test

@@ -97,7 +97,7 @@ public class ManagerStaffSkillControllerTest {
     @WithMockUser(authorities = "MANAGER")
     @Test
     public void findById_success_manager() throws Exception {
-        when(managerStaffSkillService.findManagerStaffSkillById(1L)).thenReturn(java.util.Optional.of(managerStaffSkillOne));
+        when(managerStaffSkillService.findManagerStaffSkillById(1L)).thenReturn(managerStaffSkillOne);
 
         mockMvc.perform(MockMvcRequestBuilders
                         .get("/api/skill/manager/1")
@@ -110,7 +110,7 @@ public class ManagerStaffSkillControllerTest {
     @WithMockUser(authorities = "STAFF")
     @Test
     public void findById_forbidden_staff() throws Exception {
-        when(managerStaffSkillService.findManagerStaffSkillById(1L)).thenReturn(java.util.Optional.of(managerStaffSkillOne));
+        when(managerStaffSkillService.findManagerStaffSkillById(1L)).thenReturn(managerStaffSkillOne);
 
         mockMvc.perform(MockMvcRequestBuilders
                         .get("/api/skill/manager/1")
