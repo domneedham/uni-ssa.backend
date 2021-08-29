@@ -6,6 +6,11 @@ import lombok.*;
 import javax.persistence.*;
 import java.util.List;
 
+/**
+ * All information required for a manager within the application.
+ * Most details are encompassed in AppUser entity.
+ * @see AppUser for more information about the details of the user.
+ */
 @Entity
 @Table(name= ManagerConstants.TABLE_NAME)
 @NoArgsConstructor

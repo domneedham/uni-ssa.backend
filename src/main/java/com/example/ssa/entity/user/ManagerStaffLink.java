@@ -5,6 +5,10 @@ import lombok.*;
 
 import javax.persistence.*;
 
+/**
+* @deprecated no longer used.
+ */
+
 @Entity
 @Table(name= ManagerStaffLinkConstants.TABLE_NAME)
 @NoArgsConstructor

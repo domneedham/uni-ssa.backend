@@ -7,6 +7,10 @@ import lombok.*;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
+/**
+ * All information required for a staff skill.
+ * This entity is used as a way to represent a staffs rating of the specific skill out of their skill set.
+ */
 @Entity
 @Table(name = StaffSkillConstants.TABLE_NAME)
 @NoArgsConstructor
@@ -33,6 +37,9 @@ public class StaffSkill {
     @Column(name = StaffSkillConstants.RATING)
     private Integer rating;
 
+    /**
+     * @apiNote Not currently used for any purpose.
+     */
     @Column(name = StaffSkillConstants.LAST_UPDATED)
     private LocalDateTime lastUpdated;
 

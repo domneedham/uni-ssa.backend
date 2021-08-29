@@ -8,6 +8,11 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * All information required for a staff member within the application.
+ * Most details are encompassed in AppUser entity.
+ * @see AppUser for more information about the details of the user.
+ */
 @Entity
 @Table(name= StaffConstants.TABLE_NAME)
 @NoArgsConstructor

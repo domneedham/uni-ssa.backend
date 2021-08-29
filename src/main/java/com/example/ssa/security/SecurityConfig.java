@@ -67,9 +67,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests().antMatchers(HttpMethod.GET, "/api/skill/**").hasAnyAuthority(staffRole, managerRole);
         http.authorizeRequests().antMatchers("/api/skill/**").hasAnyAuthority(managerRole);
 
+        // deny all other requests as they do not match any route configured
         http.authorizeRequests().anyRequest().denyAll();
 
+        // add the authentication filter to all requests
         http.addFilter(customAuthenticationFilter);
+        // add the authorisation filter before all requests
         http.addFilterBefore(new CustomAuthorisationFilter(), UsernamePasswordAuthenticationFilter.class);
     }
 

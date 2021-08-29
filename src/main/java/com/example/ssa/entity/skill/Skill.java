@@ -5,6 +5,10 @@ import lombok.*;
 
 import javax.persistence.*;
 
+/**
+ * All information required for a skill.
+ * This entity is used for representing a common skill that staff members may have.
+ */
 @Entity
 @Table(name = SkillConstants.TABLE_NAME)
 @NoArgsConstructor

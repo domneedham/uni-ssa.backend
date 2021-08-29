@@ -8,6 +8,11 @@ import lombok.*;
 import javax.persistence.*;
 import java.util.List;
 
+/**
+ * All information required for a manager staff skill.
+ * This entity is used for obtaining a list of staff who have assigned themselves to the skill.
+ * @see StaffSkill for the information on how staff assign themselves to a skill.
+ */
 @Entity
 @Table(name = ManagerStaffSkillConstants.TABLE_NAME)
 @NoArgsConstructor

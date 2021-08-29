@@ -7,6 +7,12 @@ import org.hibernate.annotations.Formula;
 
 import javax.persistence.*;
 
+/**
+ * All information required for any user in the application.
+ * This entity is used for storage of all user information, except for specific details related to their role.
+ * @see Manager for more information of the extra fields related to a manager.
+ * @see Staff for more information of the extraf fields related to a staff member.
+ */
 @Entity
 @Table(name = AppUserConstants.TABLE_NAME)
 @NoArgsConstructor
