@@ -3,6 +3,7 @@ package com.example.ssa.service;
 import com.example.ssa.entity.user.Manager;
 import com.example.ssa.exceptions.requests.bad.ManagerDoesNotExistException;
 import com.example.ssa.repository.ManagerRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,6 +12,7 @@ import java.util.Optional;
 /**
  * A range of methods to handle Manager CRUD operations.
  */
+@Slf4j
 @Service
 public class ManagerServiceImpl implements ManagerService {
     /**
@@ -42,6 +44,7 @@ public class ManagerServiceImpl implements ManagerService {
         Optional<Manager> manager = managerRepository.findById(id);
 
         if (manager.isEmpty()) {
+            log.error(String.format("Manager not found with id of %d", id));
             throw new ManagerDoesNotExistException("Manager not found with that id");
         }
 
@@ -79,6 +82,7 @@ public class ManagerServiceImpl implements ManagerService {
         Optional<Manager> manager = managerRepository.findByUserDetailsEmail(email);
 
         if (manager.isEmpty()) {
+            log.error(String.format("Manager not found with email of %s", email));
             throw new ManagerDoesNotExistException("Manager not found with that email");
         }
 

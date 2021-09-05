@@ -3,6 +3,7 @@ package com.example.ssa.service;
 import com.example.ssa.entity.user.AppUser;
 import com.example.ssa.exceptions.requests.bad.AppUserDoesNotExistException;
 import com.example.ssa.repository.AppUserRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -18,6 +19,7 @@ import java.util.Optional;
 /**
  * A range of methods to handle AppUser CRUD operations.
  */
+@Slf4j
 @Service
 public class AppUserServiceImpl implements AppUserService, UserDetailsService {
 
@@ -56,6 +58,7 @@ public class AppUserServiceImpl implements AppUserService, UserDetailsService {
         Optional<AppUser> appUser = appUserRepository.findById(id);
 
         if (appUser.isEmpty()) {
+            log.error(String.format("User not found with id of %d", id));
             throw new AppUserDoesNotExistException("User not found with that id");
         }
 
@@ -94,6 +97,7 @@ public class AppUserServiceImpl implements AppUserService, UserDetailsService {
         AppUser user = appUserRepository.findByEmail(username);
 
         if (user == null) {
+            log.error(String.format("User not found with username of %s", username));
             throw new UsernameNotFoundException("User not found");
         }
 

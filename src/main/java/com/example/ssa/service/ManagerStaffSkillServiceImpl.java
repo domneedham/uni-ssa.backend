@@ -3,6 +3,7 @@ package com.example.ssa.service;
 import com.example.ssa.entity.skill.ManagerStaffSkill;
 import com.example.ssa.exceptions.requests.bad.ManagerStaffSkillDoesNotExistException;
 import com.example.ssa.repository.ManagerStaffSkillRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,6 +12,7 @@ import java.util.Optional;
 /**
  * A range of methods to handle ManagerStaffSkill CRUD operations.
  */
+@Slf4j
 @Service
 public class ManagerStaffSkillServiceImpl implements ManagerStaffSkillService {
     /**
@@ -42,6 +44,7 @@ public class ManagerStaffSkillServiceImpl implements ManagerStaffSkillService {
         Optional<ManagerStaffSkill> managerStaffSkill =  managerStaffSkillRepository.findById(id);
 
         if (managerStaffSkill.isEmpty()) {
+            log.error(String.format("Skill not found with id of %d", id));
             throw new ManagerStaffSkillDoesNotExistException("Skill not found with that id");
         }
 

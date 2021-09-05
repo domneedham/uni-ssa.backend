@@ -7,6 +7,7 @@ import com.example.ssa.exceptions.requests.bad.ManagerDoesNotExistException;
 import com.example.ssa.exceptions.requests.bad.StaffDoesNotExistException;
 import com.example.ssa.repository.AppUserRepository;
 import com.example.ssa.repository.StaffRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,6 +16,7 @@ import java.util.Optional;
 /**
  * A range of methods to handle Staff CRUD operations.
  */
+@Slf4j
 @Service
 public class StaffServiceImpl implements StaffService {
     /**
@@ -52,6 +54,7 @@ public class StaffServiceImpl implements StaffService {
         Optional<Staff> staff = staffRepository.findById(id);
 
         if (staff.isEmpty()) {
+            log.error(String.format("Staff not found with id of %d", id));
             throw new StaffDoesNotExistException("Staff not found with that id");
         }
 
@@ -79,6 +82,7 @@ public class StaffServiceImpl implements StaffService {
         Optional<Staff> staff = staffRepository.findByUserDetailsEmail(email);
 
         if (staff.isEmpty()) {
+            log.error(String.format("Staff not found with id of %s", email));
             throw new StaffDoesNotExistException("Staff not found with that email");
         }
 
@@ -96,6 +100,7 @@ public class StaffServiceImpl implements StaffService {
         // check manager id is manager
         Optional<AppUser> manager = appUserRepository.findById(staff.getManagerDetails().getId());
         if (manager.isEmpty() || manager.get().getUserRole() == UserRole.STAFF) {
+            log.error(String.format("Manager not found with id of %s", manager.isPresent() ? manager.get().getId() : "null"));
             throw new ManagerDoesNotExistException("Manager not found with that id");
         }
         return staffRepository.save(staff);
@@ -112,6 +117,7 @@ public class StaffServiceImpl implements StaffService {
         Optional<Staff> staffToUpdate = staffRepository.findById(staff.getId());
 
         if (staffToUpdate.isEmpty()) {
+            log.error(String.format("Staff not found with id of %d", staff.getId()));
             throw new StaffDoesNotExistException("Staff not found with that id");
         }
 

@@ -3,6 +3,7 @@ package com.example.ssa.service;
 import com.example.ssa.entity.skill.StaffSkill;
 import com.example.ssa.exceptions.requests.bad.StaffSkillDoesNotExistException;
 import com.example.ssa.repository.StaffSkillRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,6 +12,7 @@ import java.util.Optional;
 /**
  * A range of methods to handle Staff Skill CRUD operations.
  */
+@Slf4j
 @Service
 public class StaffSkillServiceImpl implements StaffSkillService {
     /**
@@ -42,6 +44,7 @@ public class StaffSkillServiceImpl implements StaffSkillService {
         Optional<StaffSkill> skill = staffSkillRepository.findById(id);
 
         if (skill.isEmpty()) {
+            log.error(String.format("Staff not found with id of %d", id));
             throw new StaffSkillDoesNotExistException("Staff skill not found with that id");
         }
 
@@ -60,6 +63,7 @@ public class StaffSkillServiceImpl implements StaffSkillService {
         Optional<StaffSkill> skill = staffSkillRepository.findBySkillIdAndStaffDetailsId(skillId, staffId);
 
         if (skill.isEmpty()) {
+            log.error(String.format("Staff not found with id of %d", skillId));
             throw new StaffSkillDoesNotExistException("Staff skill not found with that id");
         }
 

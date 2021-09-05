@@ -2,6 +2,7 @@ package com.example.ssa.entity.user;
 
 import com.example.ssa.entity.user.constants.AppUserConstants;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import org.hibernate.annotations.Formula;
 
@@ -38,7 +39,7 @@ public class AppUser {
     private String email;
 
     @Column(name = AppUserConstants.PASSWORD)
-    @JsonIgnore
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
     @Column(name = AppUserConstants.USER_ROLE)

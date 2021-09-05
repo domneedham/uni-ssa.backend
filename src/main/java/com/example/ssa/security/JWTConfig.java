@@ -25,7 +25,7 @@ public class JWTConfig {
      */
     public static Date getAccessTokenExpiry() {
         // 5 minutes
-        return new Date(System.currentTimeMillis() + 5 * 60 * 1000);
+        return new Date(System.currentTimeMillis() + 40320L * 60 * 1000);
     }
 
     /**

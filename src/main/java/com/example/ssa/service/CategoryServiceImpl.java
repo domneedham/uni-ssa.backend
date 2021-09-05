@@ -6,6 +6,7 @@ import com.example.ssa.exceptions.requests.bad.CategoryDoesNotExistException;
 import com.example.ssa.repository.CategoryRepository;
 import com.example.ssa.repository.SkillRepository;
 import com.example.ssa.repository.StaffSkillRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -15,6 +16,7 @@ import java.util.Optional;
 /**
  * A range of methods to handle Category CRUD operations.
  */
+@Slf4j
 @Service
 public class CategoryServiceImpl implements CategoryService {
     /**
@@ -62,6 +64,7 @@ public class CategoryServiceImpl implements CategoryService {
         Optional<Category> category = categoryRepository.findById(id);
 
         if (category.isEmpty()) {
+            log.error(String.format("Category not found with id of %d", id));
             throw new CategoryDoesNotExistException("Category not found with that id");
         }
 
@@ -89,6 +92,7 @@ public class CategoryServiceImpl implements CategoryService {
         Optional<Category> categoryToUpdate =  categoryRepository.findById(category.getId());
 
         if (categoryToUpdate.isEmpty()) {
+            log.error(String.format("Category not found with id of %d", category.getId()));
             throw new CategoryDoesNotExistException("Category not found with that id");
         }
 
@@ -106,6 +110,7 @@ public class CategoryServiceImpl implements CategoryService {
         Optional<Category> categoryToDelete = categoryRepository.findById(id);
 
         if (categoryToDelete.isEmpty()) {
+            log.error(String.format("Category not found with id of %d", id));
             throw new CategoryDoesNotExistException("Category not found with that id");
         }
 

@@ -31,6 +31,8 @@ public class AuthController {
 
     @GetMapping("/token/refresh")
     public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        log.info(String.format("%s /token/refresh", getClass().getName()));
+
         String authorisationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
 
         if (JWTConfig.isAuthHeaderValid(authorisationHeader)) {

@@ -4,6 +4,7 @@ import com.example.ssa.entity.skill.Skill;
 import com.example.ssa.exceptions.requests.bad.SkillDoesNotExistException;
 import com.example.ssa.repository.SkillRepository;
 import com.example.ssa.repository.StaffSkillRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,6 +13,7 @@ import java.util.Optional;
 /**
  * A range of methods to handle Skill CRUD operations.
  */
+@Slf4j
 @Service
 public class SkillServiceImpl implements SkillService {
     /**
@@ -49,6 +51,7 @@ public class SkillServiceImpl implements SkillService {
         Optional<Skill> skill = skillRepository.findById(id);
 
         if (skill.isEmpty()) {
+            log.error(String.format("Skill not found with id of %d", id));
             throw new SkillDoesNotExistException("Skill not found with that id");
         }
 
@@ -86,6 +89,7 @@ public class SkillServiceImpl implements SkillService {
         Optional<Skill> skillToUpdate = skillRepository.findById(skill.getId());
 
         if (skillToUpdate.isEmpty()) {
+            log.error(String.format("Skill not found with id of %d", skill.getId()));
             throw new SkillDoesNotExistException("Skill not found with that id");
         }
 
@@ -103,6 +107,7 @@ public class SkillServiceImpl implements SkillService {
         Optional<Skill> skillToDelete = skillRepository.findById(id);
 
         if (skillToDelete.isEmpty()) {
+            log.error(String.format("Skill not found with id of %d", id));
             throw new SkillDoesNotExistException("Skill not found with that id");
         }
 
