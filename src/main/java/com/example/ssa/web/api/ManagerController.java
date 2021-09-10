@@ -21,14 +21,12 @@ public class ManagerController {
 
     @GetMapping("/")
     public List<Manager> findAll() {
-
         log.info(String.format("%s /", getClass().getName()));
         return managerService.findAllManagers();
     }
 
     @GetMapping("/{id}")
     public Manager findById(@PathVariable(value = "id") Long id) {
-
         log.info(String.format("%s /{id}", getClass().getName()));
         return managerService.findManagerById(id);
     }
