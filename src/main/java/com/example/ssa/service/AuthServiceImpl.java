@@ -32,7 +32,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     /**
-     *
+     * Refresh a JWT token for future use.
      * @param request The request variable created for every request.
      * @param response The response variable created for every request.
      * @throws IOException If the refresh token is missing.
